@@ -1,7 +1,7 @@
 import * as express from 'express';
 import * as eah from 'express-async-handler';
 import {
-  signUp, signIn, authenticate, signOut, test,
+  signUp, signIn, authenticate, signOut,
 } from '../controllers/sampleController';
 import { anotherSampleMiddleware } from '../middlewares/anotherSampleMiddleware';
 
@@ -19,7 +19,5 @@ sampleRouter.post('/sign-up', eah(signUp));
 sampleRouter.post('/sign-in', eah(signIn));
 
 sampleRouter.post('/sign-out', eah(authenticate), eah(signOut));
-
-sampleRouter.post('/test', eah(authenticate), eah(test));
 
 export default sampleRouter;
