@@ -9,11 +9,10 @@ import { BlackList } from '../models/BlackList';
 import userValidation from '../helpers/validation/userValidation';
 import { ValidationError } from '../helpers/validation/ValidationError';
 
-async function signUp(req: express.Request, res: express.Response, next: express.NextFunction) {
+async function signUp(req: express.Request, res: express.Response) {
   const { error } = userValidation.checkUser(req.body);
   if (error) throw new ValidationError(error.details);
 
-  // @ts-ignore
   const userExist: User = await model(User).findOne({ login: req.body.login });
   if (userExist) throw new Conflict('Sorry such user is already exist');
 
@@ -26,19 +25,18 @@ async function signUp(req: express.Request, res: express.Response, next: express
   });
 }
 
-async function signIn(req: express.Request, res: express.Response, next: express.NextFunction) {
+async function signIn(req: express.Request, res: express.Response) {
   const { error } = userValidation.checkUser(req.body);
   if (error) throw new ValidationError(error.details);
 
-  // @ts-ignore
-  const userExist: User = await model(User).findOne({ login: req.body.login });
-  if (!userExist) throw new NotFound('Sorry such user does not exist');
+  const user: User = await model(User).findOne({ login: req.body.login });
+  if (!user) throw new NotFound('Sorry such user does not exist');
 
-  const passwordCompare = await bcrypt.compare(req.body.password, userExist.password);
+  const passwordCompare = await bcrypt.compare(req.body.password, user.password);
   if (!passwordCompare) throw new Unauthorized('Wrong password!');
 
-  const access = jwt.sign({ id: userExist.id, login: userExist.login }, jwtConfig.secret, jwtConfig.accessExpirationTime);
-  const refresh = jwt.sign({ id: userExist.id, login: userExist.login }, jwtConfig.secret, jwtConfig.refreshExpirationTime);
+  const access = jwt.sign({ id: user.id, login: user.login, isAdmin: user.isAdmin }, jwtConfig.secret, jwtConfig.accessExpirationTime);
+  const refresh = jwt.sign({ id: user.id, login: user.login }, jwtConfig.secret, jwtConfig.refreshExpirationTime);
 
   return res.json({
     access,
@@ -46,15 +44,12 @@ async function signIn(req: express.Request, res: express.Response, next: express
   });
 }
 
-async function signOut(req: express.Request, res: express.Response, next: express.NextFunction) {
+async function signOut(req: express.Request, res: express.Response) {
   const { error } = userValidation.logout(req.body);
   if (error) throw new ValidationError(error.details);
 
-  if (req.body.access) {
-    // @ts-ignore
-    await model(BlackList).save({ token: req.body.access });
-  }
-  // @ts-ignore
+  if (req.body.access) await model(BlackList).save({ token: req.body.access });
+
   await model(BlackList).save({ token: req.body.refresh });
 
   res.status(200).json({
@@ -62,22 +57,8 @@ async function signOut(req: express.Request, res: express.Response, next: expres
   });
 }
 
-async function authenticate(req: express.Request, res: express.Response, next: express.NextFunction) {
-  const token = req.headers['x-auth-token'];
-  if (!token) throw new Unauthorized('Please login');
-
-  // @ts-ignore
-  const existInBlackList = await model(BlackList).findOne({ token });
-  if (existInBlackList) throw new Unauthorized('Invalid token');
-
-  jwt.verify(token, jwtConfig.secret);
-
-  return next();
-}
-
 export {
   signUp,
   signIn,
   signOut,
-  authenticate,
 };

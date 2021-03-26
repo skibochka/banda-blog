@@ -1,10 +1,13 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @Entity()
-export class BlackList {
+export class Like {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-  token: string;
+  postID: number;
+
+  @Column()
+  userID: number;
 }

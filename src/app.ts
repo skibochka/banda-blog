@@ -1,24 +1,23 @@
-import bodyParser = require('body-parser');
 import * as express from 'express';
 import { createConnection } from 'typeorm';
 import 'dotenv/config';
-import sampleRouter from './routes/sampleRouter';
+import authRouter from './routes/authRouter';
+import postRouter from './routes/postRouter';
+import bodyParser = require('body-parser');
 
 export const appPromise = (async (): Promise<express.Application> => {
-    const app = express();
+  const app = express();
 
-    await createConnection();
+  await createConnection();
 
-    // Global middleware goes below
-    app.use(bodyParser.json({
-        inflate: true,
-    }));
+  app.use(bodyParser.json({
+    inflate: true,
+  }));
 
-    // Router registration goes here
-    app.use('/', sampleRouter);
-    // app.use('/otherRoute', otherRouter);
+  app.use('/auth', authRouter);
+  app.use('/', postRouter);
 
-    // Define 404 and 500 handlers below
+  // Define 404 and 500 handlers below
 
-    return app;
+  return app;
 });
