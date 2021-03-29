@@ -15,7 +15,7 @@ export const appPromise = (async (): Promise<express.Application> => {
   }));
 
   app.use('/auth', authRouter);
-  app.use('/', postRouter);
+  app.use('/post', postRouter);
 
   // Define 404 and 500 handlers below
 

@@ -26,6 +26,12 @@ function logout(data) {
       refresh: Joi
         .string()
         .required(),
+      userID: Joi
+        .number()
+        .required(),
+      isAdmin: Joi
+        .boolean()
+        .required(),
     })
     .validate(data);
 }

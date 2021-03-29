@@ -1,6 +1,14 @@
 import {
-  Entity, PrimaryGeneratedColumn, Column, UpdateDateColumn, CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  UpdateDateColumn,
+  CreateDateColumn,
+  OneToMany, ManyToOne,
 } from 'typeorm';
+import { Like } from './Likes';
+import { Comment } from './Comment';
+import { User } from './User';
 
 @Entity()
 export class Post {
@@ -13,8 +21,14 @@ export class Post {
   @Column()
   content: string;
 
-  @Column()
-  userID: number;
+  @ManyToOne(() => User, (user) => user.posts)
+  userId: User;
+
+  @OneToMany(() => Comment, (comment) => comment.post)
+  comments: Comment[];
+
+  @OneToMany(() => Like, (like) => like.postId)
+  likes: Like[];
 
   @CreateDateColumn()
   createdAt: Date;

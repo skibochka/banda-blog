@@ -2,10 +2,10 @@ import {
   MigrationInterface, QueryRunner, Table, TableForeignKey,
 } from 'typeorm';
 
-export class createLikes1616745705397 implements MigrationInterface {
+export class createCommentLikes1617003365415 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.createTable(new Table({
-      name: 'likes',
+    queryRunner.createTable(new Table({
+      name: 'comment_likes',
       columns: [
         {
           name: 'id',
@@ -17,13 +17,13 @@ export class createLikes1616745705397 implements MigrationInterface {
           type: 'int',
         },
         {
-          name: 'postId',
+          name: 'commentId',
           type: 'int',
         },
       ],
     }), true);
 
-    await queryRunner.createForeignKey('likes', new TableForeignKey({
+    await queryRunner.createForeignKey('comment_likes', new TableForeignKey({
       columnNames: ['postId'],
       referencedColumnNames: ['id'],
       referencedTableName: 'posts',
@@ -31,6 +31,6 @@ export class createLikes1616745705397 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable('likes');
+    await queryRunner.dropTable('comment_likes');
   }
 }

@@ -15,7 +15,9 @@ export async function sampleMiddleware(req: express.Request, res: express.Respon
   const existInBlackList = await model(BlackList).findOne({ token });
   if (existInBlackList) throw new Unauthorized('Invalid token');
 
-  jwt.verify(token, jwtConfig.secret);
+  const userPayload = jwt.verify(token, jwtConfig.secret);
+  req.body.userID = userPayload.id;
+  req.body.isAdmin = userPayload.isAdmin;
 
   return next();
 }

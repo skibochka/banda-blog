@@ -1,6 +1,14 @@
 import {
-  Entity, PrimaryGeneratedColumn, Column, UpdateDateColumn, CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  UpdateDateColumn,
+  CreateDateColumn,
+  OneToMany,
 } from 'typeorm';
+import { Post } from './Post';
+import { Like } from './Likes';
+import { CommentLike } from './CommentLike';
 
 @Entity()
 export class User {
@@ -15,6 +23,15 @@ export class User {
 
     @Column()
     password: string;
+
+    @OneToMany(() => Post, (post) => post.userId)
+    posts: Post[]
+
+    @OneToMany(() => Like, (like) => like.userId)
+    likes: Like[]
+
+    @OneToMany(() => CommentLike, (commentLike) => commentLike.userId)
+    commentLikes: Post[]
 
     @CreateDateColumn()
     createdAt: Date;
