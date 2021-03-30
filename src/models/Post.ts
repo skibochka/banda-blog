@@ -10,7 +10,7 @@ import { Like } from './Likes';
 import { Comment } from './Comment';
 import { User } from './User';
 
-@Entity()
+@Entity('posts')
 export class Post {
   @PrimaryGeneratedColumn()
   id: number;
@@ -22,12 +22,12 @@ export class Post {
   content: string;
 
   @ManyToOne(() => User, (user) => user.posts)
-  userId: User;
+  user: User;
 
   @OneToMany(() => Comment, (comment) => comment.post)
   comments: Comment[];
 
-  @OneToMany(() => Like, (like) => like.postId)
+  @OneToMany(() => Like, (like) => like.post)
   likes: Like[];
 
   @CreateDateColumn()

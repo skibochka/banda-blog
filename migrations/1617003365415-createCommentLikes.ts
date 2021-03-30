@@ -4,16 +4,17 @@ import {
 
 export class createCommentLikes1617003365415 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
-    queryRunner.createTable(new Table({
+    await queryRunner.createTable(new Table({
       name: 'comment_likes',
       columns: [
         {
           name: 'id',
           type: 'int',
           isPrimary: true,
+          isGenerated: true,
         },
         {
-          name: 'userID',
+          name: 'userId',
           type: 'int',
         },
         {
@@ -24,9 +25,14 @@ export class createCommentLikes1617003365415 implements MigrationInterface {
     }), true);
 
     await queryRunner.createForeignKey('comment_likes', new TableForeignKey({
-      columnNames: ['postId'],
+      columnNames: ['commentId'],
       referencedColumnNames: ['id'],
       referencedTableName: 'posts',
+    }));
+    await queryRunner.createForeignKey('comment_likes', new TableForeignKey({
+      columnNames: ['userId'],
+      referencedColumnNames: ['id'],
+      referencedTableName: 'users',
     }));
   }
 

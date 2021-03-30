@@ -11,12 +11,12 @@ export async function sampleMiddleware(req: express.Request, res: express.Respon
   const token = req.headers['x-auth-token'];
   if (!token) throw new Unauthorized('Please login');
 
-  // @ts-ignore
-  const existInBlackList = await model(BlackList).findOne({ token });
+
+  const existInBlackList = await model(BlackList).findOne({ token: token as string });
   if (existInBlackList) throw new Unauthorized('Invalid token');
 
   const userPayload = jwt.verify(token, jwtConfig.secret);
-  req.body.userID = userPayload.id;
+  req.body.userId = userPayload.id;
   req.body.isAdmin = userPayload.isAdmin;
 
   return next();

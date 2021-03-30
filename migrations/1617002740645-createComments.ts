@@ -11,13 +11,14 @@ export class createComments1617002740645 implements MigrationInterface {
           name: 'id',
           type: 'int',
           isPrimary: true,
+          isGenerated: true,
         },
         {
           name: 'content',
           type: 'text',
         },
         {
-          name: 'userID',
+          name: 'userId',
           type: 'int',
         },
         {
@@ -41,6 +42,11 @@ export class createComments1617002740645 implements MigrationInterface {
       columnNames: ['postId'],
       referencedColumnNames: ['id'],
       referencedTableName: 'posts',
+    }));
+    await queryRunner.createForeignKey('comments', new TableForeignKey({
+      columnNames: ['userId'],
+      referencedColumnNames: ['id'],
+      referencedTableName: 'users',
     }));
   }
 

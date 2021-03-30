@@ -2,13 +2,14 @@ import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
 export class createBlackList1616743760168 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
-    queryRunner.createTable(new Table({
-      name: 'BlackList',
+    await queryRunner.createTable(new Table({
+      name: 'black_list',
       columns: [
         {
           name: 'id',
           type: 'int',
           isPrimary: true,
+          isGenerated: true,
         },
         {
           name: 'token',
@@ -19,6 +20,6 @@ export class createBlackList1616743760168 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    queryRunner.dropTable('BlackList');
+    await queryRunner.dropTable('black_list');
   }
 }

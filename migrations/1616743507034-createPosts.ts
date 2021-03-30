@@ -14,6 +14,7 @@ export class createPosts1616743507034 implements MigrationInterface {
           name: 'id',
           type: 'int',
           isPrimary: true,
+          isGenerated: true,
         },
         {
           name: 'title',

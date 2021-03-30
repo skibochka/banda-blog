@@ -13,7 +13,7 @@ function checkPost(data) {
         .min(3)
         .max(1000)
         .required(),
-      userID: Joi
+      userId: Joi
         .number()
         .required(),
       isAdmin: Joi
@@ -23,10 +23,10 @@ function checkPost(data) {
     .validate(data);
 }
 
-function checkID(data) {
+function checkId(data) {
   return Joi
     .object({
-      postID: Joi
+      postId: Joi
         .number()
         .required(),
     })
@@ -36,10 +36,10 @@ function checkID(data) {
 function checkParams(data) {
   return Joi
     .object({
-      postID: Joi
+      postId: Joi
         .number()
         .required(),
-      userID: Joi
+      userId: Joi
         .number()
         .required(),
       isAdmin: Joi
@@ -52,7 +52,7 @@ function checkParams(data) {
 function updatePost(data) {
   return Joi
     .object({
-      postID: Joi
+      postId: Joi
         .number()
         .required(),
       update: Joi
@@ -69,7 +69,7 @@ function updatePost(data) {
             .required(),
         })
         .required(),
-      userID: Joi
+      userId: Joi
         .number()
         .required(),
       isAdmin: Joi
@@ -97,13 +97,13 @@ function getPosts(data) {
 function checkComment(data) {
   return Joi
     .object({
-      postID: Joi
+      postId: Joi
         .number()
         .required(),
       content: Joi
         .string()
         .required(),
-      userID: Joi
+      userId: Joi
         .number()
         .required(),
       isAdmin: Joi
@@ -116,10 +116,10 @@ function checkComment(data) {
 function deleteComment(data) {
   return Joi
     .object({
-      commentID: Joi
+      commentId: Joi
         .number()
         .required(),
-      userID: Joi
+      userId: Joi
         .number()
         .required(),
       isAdmin: Joi
@@ -132,7 +132,7 @@ function deleteComment(data) {
 function updateComment(data) {
   return Joi
     .object({
-      commentID: Joi
+      commentId: Joi
         .number()
         .required(),
       update: Joi
@@ -144,7 +144,7 @@ function updateComment(data) {
             .required(),
         })
         .required(),
-      userID: Joi
+      userId: Joi
         .number()
         .required(),
       isAdmin: Joi
@@ -157,10 +157,10 @@ function updateComment(data) {
 function checkCommentLikeParams(data) {
   return Joi
     .object({
-      commentID: Joi
+      commentId: Joi
         .number()
         .required(),
-      userID: Joi
+      userId: Joi
         .number()
         .required(),
       isAdmin: Joi
@@ -172,7 +172,7 @@ function checkCommentLikeParams(data) {
 
 export default {
   checkPost,
-  checkID,
+  checkId,
   checkParams,
   updatePost,
   getPosts,

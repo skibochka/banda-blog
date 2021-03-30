@@ -4,13 +4,15 @@ import {
   Column,
   UpdateDateColumn,
   CreateDateColumn,
-  OneToMany,
+  OneToMany, JoinColumn,
 } from 'typeorm';
+import { Exclude } from 'class-transformer';
 import { Post } from './Post';
 import { Like } from './Likes';
 import { CommentLike } from './CommentLike';
+import { Comment } from './Comment';
 
-@Entity()
+@Entity('users')
 export class User {
     @PrimaryGeneratedColumn()
     id: number;
@@ -24,14 +26,17 @@ export class User {
     @Column()
     password: string;
 
-    @OneToMany(() => Post, (post) => post.userId)
+    @OneToMany(() => Post, (post) => post.user)
     posts: Post[]
 
-    @OneToMany(() => Like, (like) => like.userId)
+    @OneToMany(() => Like, (like) => like.user)
     likes: Like[]
 
-    @OneToMany(() => CommentLike, (commentLike) => commentLike.userId)
-    commentLikes: Post[]
+    @OneToMany(() => Comment, (comment) => comment.user)
+    comments: Comment[]
+
+    @OneToMany(() => CommentLike, (commentLike) => commentLike.user)
+    commentLikes: CommentLike[]
 
     @CreateDateColumn()
     createdAt: Date;

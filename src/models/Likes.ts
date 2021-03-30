@@ -1,19 +1,19 @@
 import {
   Entity,
   PrimaryGeneratedColumn,
-  Column, ManyToOne,
+  ManyToOne,
 } from 'typeorm';
 import { Post } from './Post';
 import { User } from './User';
 
-@Entity()
+@Entity('likes')
 export class Like {
   @PrimaryGeneratedColumn()
   id: number;
 
   @ManyToOne(() => User, (user) => user.likes)
-  userId: User;
+  user: User;
 
   @ManyToOne(() => Post, (post) => post.likes)
-  postId: Post;
+  post: Post;
 }

@@ -8,8 +8,9 @@ import {
 } from 'typeorm';
 import { CommentLike } from './CommentLike';
 import { Post } from './Post';
+import { User } from './User';
 
-@Entity()
+@Entity('comments')
 export class Comment {
   @PrimaryGeneratedColumn()
   id: number;
@@ -17,11 +18,8 @@ export class Comment {
   @Column()
   content: string;
 
-  @Column()
-  postID: number;
-
-  @Column()
-  userID: number;
+  @ManyToOne(() => User, (user) => user.comments)
+  user: User;
 
   @OneToMany(() => CommentLike, (commentLike) => commentLike.comment)
   likes: CommentLike[];

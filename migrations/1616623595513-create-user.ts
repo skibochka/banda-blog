@@ -9,10 +9,12 @@ export class createUser1616623595513 implements MigrationInterface {
           name: 'id',
           type: 'int',
           isPrimary: true,
+          isGenerated: true,
         },
         {
           name: 'isAdmin',
           type: 'boolean',
+          default: false,
         },
         {
           name: 'login',

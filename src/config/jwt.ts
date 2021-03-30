@@ -1,6 +1,6 @@
 const jwtConfig = {
   secret: 'superSecurity',
-  accessExpirationTime: { expiresIn: '10m' },
+  accessExpirationTime: { expiresIn: '50m' },
   refreshExpirationTime: { expiresIn: '7d' },
 };
 export default jwtConfig;

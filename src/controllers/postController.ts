@@ -8,30 +8,36 @@ import { Post } from '../models/Post';
 import { Like } from '../models/Likes';
 import { Comment } from '../models/Comment';
 import { CommentLike } from '../models/CommentLike';
+import { User } from '../models/User';
 
 async function createPost(req: express.Request, res: express.Response) {
   const { error } = postValidation.checkPost(req.body);
   if (error) throw new ValidationError(error.details);
 
-  const createdPost: Post = await model(Post).save({
+  const user = await model(User).findOne(req.body.userId);
+
+  await model(Post).save({
     title: req.body.title,
     content: req.body.content,
-    userID: req.body.userID,
+    user,
   });
 
-  return res.status(200).json(createdPost);
+  return res.status(200).json({
+    title: req.body.title,
+    content: req.body.content,
+  });
 }
 
 async function deletePost(req: express.Request, res: express.Response) {
   const { error } = postValidation.checkParams(req.body);
   if (error) throw new ValidationError(error.details);
 
-  const post: Post = await model(Post).findOne({ id: req.body.postID });
-  if (!post) throw new NotFound('Such post does not exist');
+  if (!req.body.isAdmin) {
+    const post: Post = await model(Post).findOne({ id: req.body.postId, user: req.body.userId });
+    if (!post) throw new Conflict('You can`t delete posts of other users');
+  }
 
-  if (post.userID !== req.body.userID || req.body.isAdmin) throw new Conflict('You can`t delete posts of other users');
-
-  await model(Post).delete(post.id);
+  await model(Post).delete(req.body.postId);
 
   return res.status(200).json({
     msg: 'Post successful deleted',
@@ -42,12 +48,12 @@ async function updatePost(req: express.Request, res: express.Response) {
   const { error } = postValidation.updatePost(req.body);
   if (error) throw new ValidationError(error.details);
 
-  const post: Post = await model(Post).findOne({ id: req.body.postID });
-  if (!post) throw new NotFound('Such post does not exist');
+  if (!req.body.isAdmin) {
+    const post: Post = await model(Post).findOne({ id: req.body.postId, user: req.body.userId });
+    if (!post) throw new Conflict('You can`t update posts of other users');
+  }
 
-  if (post.userID !== req.body.userID || req.body.isAdmin) throw new Conflict('You can`t update posts of other users');
-
-  await model(Post).update(post.id, req.body.update);
+  await model(Post).update(req.body.postId, req.body.update);
 
   return res.status(200).json({
     msg: 'Successful updated',
@@ -59,14 +65,14 @@ async function likePost(req: express.Request, res: express.Response) {
   if (error) throw new ValidationError(error.details);
 
   if (await model(Like).findOne({
-    postID: req.body.postID,
-    userID: req.body.userID,
+    post: req.body.postId,
+    user: req.body.userId,
   })) throw new Conflict('You have already liked this post');
 
-  await model(Like).save({
-    postID: req.body.postID,
-    userID: req.body.userID,
-  });
+  const post = await model(Post).findOne({ id: req.body.postId });
+  const user = await model(User).findOne({ id: req.body.userId });
+
+  await model(Like).save({ post, user });
 
   return res.status(200).json({
     msg: 'Successful liked',
@@ -74,28 +80,20 @@ async function likePost(req: express.Request, res: express.Response) {
 }
 
 async function getPost(req: express.Request, res: express.Response) {
-  const { error } = postValidation.checkID(req.query);
+  const { error } = postValidation.checkId(req.query);
   if (error) throw new ValidationError(error.details);
 
-  const post: Post = await model(Post).findOne(req.query.postID as string);
+  const post: Post = await model(Post).findOne(req.query.postId as string, { loadRelationIds: true });
   if (!post) throw new NotFound('Such post does not exist');
-
-  const likes: Like[] = await model(Like).find({ postID: Number.parseInt(req.query.postID as string, 10) });
-  post.likes = likes.length;
 
   return res.status(200).json(post);
 }
 
 async function getComments(req: express.Request, res: express.Response) {
-  const { error } = postValidation.checkID(req.query);
+  const { error } = postValidation.checkId(req.query);
   if (error) throw new ValidationError(error.details);
 
-  // const comments = await model(Comment).find({ postID: Number.parseInt(req.query.postID as string, 10) });
-  const comments = await model(Comment).createQueryBuilder().where('comment.postID = :postID', {
-    postID: +req.query.postID,
-  })
-    .loadRelationCountAndMap('comment.likes', 'comment.likes')
-    .getOne();
+  const comments = await model(Comment).find({ postID: Number.parseInt(req.query.postID as string, 10), loadRelationIds: true });
 
   return res.status(200).send(comments);
 }
@@ -104,10 +102,13 @@ async function getPosts(req: express.Request, res: express.Response) {
   const { error } = postValidation.getPosts(req.query);
   if (error) throw new ValidationError(error.details);
 
+  const skip: number = Number.parseInt(req.query.skip as string, 10);
+  const page: number = Number.parseInt(req.query.page as string, 10);
+  const take: number = Number.parseInt(req.query.take as string, 10);
+
   const posts: Post[] = await model(Post).find({
-    // @ts-ignore
-    skip: req.query.skip * req.query.page,
-    take: req.query.take,
+    skip: skip * page,
+    take,
   });
   if (!posts) throw new NotFound('Posts not found');
 
@@ -118,26 +119,29 @@ async function createComment(req: express.Request, res: express.Response) {
   const { error } = postValidation.checkComment(req.body);
   if (error) throw new ValidationError(error.details);
 
-  const createdComment: Comment = await model(Comment)
+  const user = await model(User).findOne({ id: req.body.userId });
+  const post = await model(Post).findOne({ id: req.body.postId });
+
+  await model(Comment)
     .save({
       content: req.body.content,
-      postID: req.body.postID,
-      userID: req.body.userID,
+      post,
+      user,
     });
 
-  return res.status(200).json(createdComment);
+  return res.status(200).json({ content: req.body.content });
 }
 
 async function deleteComment(req: express.Request, res: express.Response) {
   const { error } = postValidation.deleteComment(req.body);
   if (error) throw new ValidationError(error.details);
 
-  const comment: Comment = await model(Comment).findOne({ id: req.body.commentID });
-  if (!comment) throw new NotFound('Such comment does not exist');
+  if (!req.body.isAdmin) {
+    const comment: Comment = await model(Comment).findOne({ id: req.body.commentId, user: req.body.userId });
+    if (!comment) throw new Conflict('You can`t delete comments of other users');
+  }
 
-  if (comment.userID !== req.body.userID || req.body.isAdmin) throw new Conflict('You can`t delete posts of other users');
-
-  await model(Comment).delete(comment.id);
+  await model(Comment).delete(req.body.commentId);
 
   return res.status(200).json({
     msg: 'Comment successful deleted',
@@ -148,12 +152,12 @@ async function updateComment(req: express.Request, res: express.Response) {
   const { error } = postValidation.updateComment(req.body);
   if (error) throw new ValidationError(error.details);
 
-  const comment: Comment = await model(Comment).findOne({ id: req.body.commentID });
-  if (!comment) throw new NotFound('Such post does not exist');
+  if (!req.body.isAdmin) {
+    const comment: Comment = await model(Comment).findOne({ id: req.body.commentId, user: req.body.userId });
+    if (!comment) throw new Conflict('You can`t update comments of other users');
+  }
 
-  if (comment.userID !== req.body.userID || req.body.isAdmin) throw new Conflict('You can`t update comments of other users');
-
-  await model(Comment).update(comment.id, req.body.update);
+  await model(Comment).update(req.body.commentId, req.body.update);
 
   return res.status(200).json({
     msg: 'Successful updated',
@@ -165,14 +169,14 @@ async function likeComment(req: express.Request, res: express.Response) {
   if (error) throw new ValidationError(error.details);
 
   if (await model(CommentLike).findOne({
-    commentID: req.body.commentID,
-    userID: req.body.userID,
+    comment: req.body.commentId,
+    user: req.body.userId,
   })) throw new Conflict('You have already liked this comment');
 
-  await model(CommentLike).save({
-    commentID: req.body.commentID,
-    userID: req.body.userID,
-  });
+  const comment = await model(Comment).findOne({ id: req.body.commentId });
+  const user = await model(User).findOne({ id: req.body.userId });
+
+  await model(CommentLike).save({ comment, user });
 
   return res.status(200).json({
     msg: 'Successful liked',
