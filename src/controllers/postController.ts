@@ -1,6 +1,5 @@
 import * as express from 'express';
 import { Conflict, NotFound } from 'http-errors';
-import { createQueryBuilder } from 'typeorm';
 import postValidation from '../helpers/validation/postValidation';
 import { ValidationError } from '../helpers/validation/ValidationError';
 import { model } from '../helpers/db/repository';
@@ -93,7 +92,7 @@ async function getComments(req: express.Request, res: express.Response) {
   const { error } = postValidation.checkId(req.query);
   if (error) throw new ValidationError(error.details);
 
-  const comments = await model(Comment).find({ postID: Number.parseInt(req.query.postID as string, 10), loadRelationIds: true });
+  const comments = await model(Comment).find({ postID: +req.query.postID, loadRelationIds: true });
 
   return res.status(200).send(comments);
 }
@@ -102,13 +101,9 @@ async function getPosts(req: express.Request, res: express.Response) {
   const { error } = postValidation.getPosts(req.query);
   if (error) throw new ValidationError(error.details);
 
-  const skip: number = Number.parseInt(req.query.skip as string, 10);
-  const page: number = Number.parseInt(req.query.page as string, 10);
-  const take: number = Number.parseInt(req.query.take as string, 10);
-
   const posts: Post[] = await model(Post).find({
-    skip: skip * page,
-    take,
+    skip: +req.query.skip * +req.query.page,
+    take: +req.query.take,
   });
   if (!posts) throw new NotFound('Posts not found');
 
