@@ -1,6 +1,6 @@
 import * as Joi from 'joi';
 
-function checkPost(data) {
+function checkPostInput(data) {
   return Joi
     .object({
       title: Joi
@@ -13,37 +13,15 @@ function checkPost(data) {
         .min(3)
         .max(1000)
         .required(),
-      userId: Joi
-        .number()
-        .required(),
-      isAdmin: Joi
-        .boolean()
-        .required(),
     })
     .validate(data);
 }
 
-function checkId(data) {
+function checkPostId(data) {
   return Joi
     .object({
       postId: Joi
         .number()
-        .required(),
-    })
-    .validate(data);
-}
-
-function checkParams(data) {
-  return Joi
-    .object({
-      postId: Joi
-        .number()
-        .required(),
-      userId: Joi
-        .number()
-        .required(),
-      isAdmin: Joi
-        .boolean()
         .required(),
     })
     .validate(data);
@@ -69,12 +47,6 @@ function updatePost(data) {
             .required(),
         })
         .required(),
-      userId: Joi
-        .number()
-        .required(),
-      isAdmin: Joi
-        .boolean()
-        .required(),
     })
     .validate(data);
 }
@@ -94,7 +66,7 @@ function getPosts(data) {
     .validate(data);
 }
 
-function checkComment(data) {
+function checkCommentInput(data) {
   return Joi
     .object({
       postId: Joi
@@ -103,27 +75,15 @@ function checkComment(data) {
       content: Joi
         .string()
         .required(),
-      userId: Joi
-        .number()
-        .required(),
-      isAdmin: Joi
-        .boolean()
-        .required(),
     })
     .validate(data);
 }
 
-function deleteComment(data) {
+function checkCommentId(data) {
   return Joi
     .object({
       commentId: Joi
         .number()
-        .required(),
-      userId: Joi
-        .number()
-        .required(),
-      isAdmin: Joi
-        .boolean()
         .required(),
     })
     .validate(data);
@@ -144,40 +104,16 @@ function updateComment(data) {
             .required(),
         })
         .required(),
-      userId: Joi
-        .number()
-        .required(),
-      isAdmin: Joi
-        .boolean()
-        .required(),
-    })
-    .validate(data);
-}
-
-function checkCommentLikeParams(data) {
-  return Joi
-    .object({
-      commentId: Joi
-        .number()
-        .required(),
-      userId: Joi
-        .number()
-        .required(),
-      isAdmin: Joi
-        .boolean()
-        .required(),
     })
     .validate(data);
 }
 
 export default {
-  checkPost,
-  checkId,
-  checkParams,
+  checkPostInput,
+  checkPostId,
   updatePost,
   getPosts,
-  checkComment,
-  deleteComment,
+  checkCommentInput,
+  checkCommentId,
   updateComment,
-  checkCommentLikeParams,
 };

@@ -11,10 +11,14 @@ import { ValidationError } from '../helpers/validation/ValidationError';
 
 async function signUp(req: express.Request, res: express.Response) {
   const { error } = userValidation.checkUser(req.body);
-  if (error) throw new ValidationError(error.details);
+  if (error) {
+    throw new ValidationError(error.details);
+  }
 
   const userExist: User = await model(User).findOne({ login: req.body.login });
-  if (userExist) throw new Conflict('Sorry such user is already exist');
+  if (userExist) {
+    throw new Conflict('Sorry such user is already exist');
+  }
 
   req.body.password = await bcrypt.hash(req.body.password, 10);
 
@@ -27,13 +31,19 @@ async function signUp(req: express.Request, res: express.Response) {
 
 async function signIn(req: express.Request, res: express.Response) {
   const { error } = userValidation.checkUser(req.body);
-  if (error) throw new ValidationError(error.details);
+  if (error) {
+    throw new ValidationError(error.details);
+  }
 
   const user: User = await model(User).findOne({ login: req.body.login });
-  if (!user) throw new NotFound('Sorry such user does not exist');
+  if (!user) {
+    throw new NotFound('Sorry such user does not exist');
+  }
 
   const passwordCompare = await bcrypt.compare(req.body.password, user.password);
-  if (!passwordCompare) throw new Unauthorized('Wrong password!');
+  if (!passwordCompare) {
+    throw new Unauthorized('Wrong password!');
+  }
 
   const access = jwt.sign({ id: user.id, login: user.login, isAdmin: user.isAdmin }, jwtConfig.secret, jwtConfig.accessExpirationTime);
   const refresh = jwt.sign({ id: user.id, login: user.login }, jwtConfig.secret, jwtConfig.refreshExpirationTime);
@@ -46,9 +56,13 @@ async function signIn(req: express.Request, res: express.Response) {
 
 async function signOut(req: express.Request, res: express.Response) {
   const { error } = userValidation.logout(req.body);
-  if (error) throw new ValidationError(error.details);
+  if (error) {
+    throw new ValidationError(error.details);
+  }
 
-  if (req.body.access) await model(BlackList).save({ token: req.body.access });
+  if (req.body.access) {
+    await model(BlackList).save({ token: req.body.access });
+  }
 
   await model(BlackList).save({ token: req.body.refresh });
 

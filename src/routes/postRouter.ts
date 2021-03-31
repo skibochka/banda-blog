@@ -10,17 +10,17 @@ import {
   updatePost,
   deleteComment, updateComment, likeComment, getComments,
 } from '../controllers/postController';
-import { sampleMiddleware } from '../middlewares/sampleMiddleware';
+import { authMiddleware } from '../middlewares/authMiddleware';
 
 const postRouter = express.Router();
-
-postRouter.use(eah(sampleMiddleware));
 
 postRouter.get('/', eah(getPosts));
 
 postRouter.get('/get', eah(getPost));
 
 postRouter.get('/comments', eah(getComments));
+
+postRouter.use(eah(authMiddleware));
 
 postRouter.post('/create', eah(createPost));
 
