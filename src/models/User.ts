@@ -26,16 +26,16 @@ export class User {
     @Column()
     password: string;
 
-    @OneToMany(() => Post, (post) => post.user)
+    @OneToMany(() => Post, (post) => post.user, { onDelete: 'CASCADE' })
     posts: Post[]
 
-    @OneToMany(() => Like, (like) => like.user)
+    @OneToMany(() => Like, (like) => like.user, { onDelete: 'CASCADE' })
     likes: Like[]
 
-    @OneToMany(() => Comment, (comment) => comment.user)
+    @OneToMany(() => Comment, (comment) => comment.user, { onDelete: 'CASCADE' })
     comments: Comment[]
 
-    @OneToMany(() => CommentLike, (commentLike) => commentLike.user)
+    @OneToMany(() => CommentLike, (commentLike) => commentLike.user, { onDelete: 'CASCADE' })
     commentLikes: CommentLike[]
 
     @CreateDateColumn()

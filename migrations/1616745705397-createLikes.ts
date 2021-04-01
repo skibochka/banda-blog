@@ -28,11 +28,13 @@ export class createLikes1616745705397 implements MigrationInterface {
       columnNames: ['postId'],
       referencedColumnNames: ['id'],
       referencedTableName: 'posts',
+      onDelete: 'CASCADE',
     }));
     await queryRunner.createForeignKey('likes', new TableForeignKey({
       columnNames: ['userId'],
       referencedColumnNames: ['id'],
       referencedTableName: 'users',
+      onDelete: 'CASCADE',
     }));
   }
 

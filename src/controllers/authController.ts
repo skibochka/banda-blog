@@ -6,15 +6,8 @@ import jwtConfig from '../config/jwt';
 import { model } from '../helpers/db/repository';
 import { User } from '../models/User';
 import { BlackList } from '../models/BlackList';
-import userValidation from '../helpers/validation/userValidation';
-import { ValidationError } from '../helpers/validation/ValidationError';
 
 async function signUp(req: express.Request, res: express.Response) {
-  const { error } = userValidation.checkUser(req.body);
-  if (error) {
-    throw new ValidationError(error.details);
-  }
-
   const userExist: User = await model(User).findOne({ login: req.body.login });
   if (userExist) {
     throw new Conflict('Sorry such user is already exist');
@@ -30,11 +23,6 @@ async function signUp(req: express.Request, res: express.Response) {
 }
 
 async function signIn(req: express.Request, res: express.Response) {
-  const { error } = userValidation.checkUser(req.body);
-  if (error) {
-    throw new ValidationError(error.details);
-  }
-
   const user: User = await model(User).findOne({ login: req.body.login });
   if (!user) {
     throw new NotFound('Sorry such user does not exist');
@@ -55,11 +43,6 @@ async function signIn(req: express.Request, res: express.Response) {
 }
 
 async function signOut(req: express.Request, res: express.Response) {
-  const { error } = userValidation.logout(req.body);
-  if (error) {
-    throw new ValidationError(error.details);
-  }
-
   if (req.body.access) {
     await model(BlackList).save({ token: req.body.access });
   }

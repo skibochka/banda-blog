@@ -18,13 +18,13 @@ export class Comment {
   @Column()
   content: string;
 
-  @ManyToOne(() => User, (user) => user.comments)
+  @ManyToOne(() => User, (user) => user.comments, { onDelete: 'CASCADE' })
   user: User;
 
-  @OneToMany(() => CommentLike, (commentLike) => commentLike.comment)
+  @OneToMany(() => CommentLike, (commentLike) => commentLike.comment, { onDelete: 'CASCADE' })
   likes: CommentLike[];
 
-  @ManyToOne(() => Post, (posts) => posts.comments)
+  @ManyToOne(() => Post, (posts) => posts.comments, { onDelete: 'CASCADE' })
   post: Post;
 
   @CreateDateColumn()

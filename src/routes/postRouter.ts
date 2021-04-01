@@ -8,34 +8,39 @@ import {
   getPosts,
   likePost,
   updatePost,
-  deleteComment, updateComment, likeComment, getComments,
+  deleteComment,
+  updateComment,
+  likeComment,
+  getComments,
 } from '../controllers/postController';
 import { authMiddleware } from '../middlewares/authMiddleware';
+import { validatorMiddleware } from '../middlewares/validatorMiddleware';
+import { postSchemas } from '../helpers/validation/postSchemas';
 
 const postRouter = express.Router();
 
-postRouter.get('/', eah(getPosts));
+postRouter.get('/', validatorMiddleware(postSchemas.getPosts), eah(getPosts));
 
-postRouter.get('/get', eah(getPost));
+postRouter.get('/get', validatorMiddleware(postSchemas.checkPostId), eah(getPost));
 
-postRouter.get('/comments', eah(getComments));
+postRouter.get('/comments', validatorMiddleware(postSchemas.checkPostId), eah(getComments));
 
 postRouter.use(eah(authMiddleware));
 
-postRouter.post('/create', eah(createPost));
+postRouter.post('/create', validatorMiddleware(postSchemas.checkPostInput), eah(createPost));
 
-postRouter.post('/like', eah(likePost));
+postRouter.post('/like', validatorMiddleware(postSchemas.checkPostId), eah(likePost));
 
-postRouter.delete('/delete', eah(deletePost));
+postRouter.delete('/delete', validatorMiddleware(postSchemas.checkPostId), eah(deletePost));
 
-postRouter.put('/update', eah(updatePost));
+postRouter.put('/update', validatorMiddleware(postSchemas.updatePost), eah(updatePost));
 
-postRouter.post('/comment', eah(createComment));
+postRouter.post('/comment', validatorMiddleware(postSchemas.checkCommentInput), eah(createComment));
 
-postRouter.delete('/comment/delete', eah(deleteComment));
+postRouter.delete('/comment/delete', validatorMiddleware(postSchemas.checkCommentId), eah(deleteComment));
 
-postRouter.put('/comment/update', eah(updateComment));
+postRouter.put('/comment/update', validatorMiddleware(postSchemas.updateComment), eah(updateComment));
 
-postRouter.post('/comment/like', eah(likeComment));
+postRouter.post('/comment/like', validatorMiddleware(postSchemas.checkCommentId), eah(likeComment));
 
 export default postRouter;

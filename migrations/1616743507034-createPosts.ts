@@ -45,6 +45,7 @@ export class createPosts1616743507034 implements MigrationInterface {
       columnNames: ['userId'],
       referencedColumnNames: ['id'],
       referencedTableName: 'users',
+      onDelete: 'CASCADE',
     }));
   }
 
