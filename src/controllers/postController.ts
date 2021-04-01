@@ -76,7 +76,7 @@ async function getPost(req: express.Request, res: express.Response) {
 }
 
 async function getComments(req: express.Request, res: express.Response) {
-  const comments = await model(Comment).find({ postId: +req.query.postId, loadRelationIds: true });
+  const comments = await model(Comment).find({ where: { post: +req.query.postId }, loadRelationIds: true });
 
   return res.status(200).send(comments);
 }
