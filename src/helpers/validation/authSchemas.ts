@@ -16,15 +16,9 @@ const checkUser = {
 const logoutUser = {
   access: Joi
     .string()
-    .optional(),
+    .required(),
   refresh: Joi
     .string()
-    .required(),
-  userID: Joi
-    .number()
-    .required(),
-  isAdmin: Joi
-    .boolean()
     .required(),
 };
 
