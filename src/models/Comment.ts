@@ -6,7 +6,7 @@ import {
   UpdateDateColumn,
   ManyToOne, OneToMany,
 } from 'typeorm';
-import { CommentLike } from './CommentLike';
+import { Like } from './Likes';
 import { Post } from './Post';
 import { User } from './User';
 
@@ -21,8 +21,8 @@ export class Comment {
   @ManyToOne(() => User, (user) => user.comments, { onDelete: 'CASCADE' })
   user: User;
 
-  @OneToMany(() => CommentLike, (commentLike) => commentLike.comment, { onDelete: 'CASCADE' })
-  likes: CommentLike[];
+  @OneToMany(() => Like, (like) => like.comment, { onDelete: 'CASCADE' })
+  likes: Like[];
 
   @ManyToOne(() => Post, (posts) => posts.comments, { onDelete: 'CASCADE' })
   post: Post;

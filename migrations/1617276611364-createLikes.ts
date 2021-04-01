@@ -2,10 +2,10 @@ import {
   MigrationInterface, QueryRunner, Table, TableForeignKey,
 } from 'typeorm';
 
-export class createCommentLikes1617003365415 implements MigrationInterface {
+export class createLikes1617276611364 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(new Table({
-      name: 'comment_likes',
+      name: 'likes',
       columns: [
         {
           name: 'id',
@@ -18,27 +18,40 @@ export class createCommentLikes1617003365415 implements MigrationInterface {
           type: 'int',
         },
         {
+          name: 'postId',
+          type: 'int',
+          isNullable: true,
+        },
+        {
           name: 'commentId',
           type: 'int',
+          isNullable: true,
         },
       ],
     }), true);
 
-    await queryRunner.createForeignKey('comment_likes', new TableForeignKey({
-      columnNames: ['commentId'],
-      referencedColumnNames: ['id'],
-      referencedTableName: 'posts',
-      onDelete: 'CASCADE',
-    }));
-    await queryRunner.createForeignKey('comment_likes', new TableForeignKey({
+    await queryRunner.createForeignKey('likes', new TableForeignKey({
       columnNames: ['userId'],
       referencedColumnNames: ['id'],
       referencedTableName: 'users',
       onDelete: 'CASCADE',
     }));
+
+    await queryRunner.createForeignKey('likes', new TableForeignKey({
+      columnNames: ['postId'],
+      referencedColumnNames: ['id'],
+      referencedTableName: 'posts',
+      onDelete: 'CASCADE',
+    }));
+    await queryRunner.createForeignKey('likes', new TableForeignKey({
+      columnNames: ['commentId'],
+      referencedColumnNames: ['id'],
+      referencedTableName: 'comments',
+      onDelete: 'CASCADE',
+    }));
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable('comment_likes');
+    await queryRunner.dropTable('likes');
   }
 }

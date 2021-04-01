@@ -4,7 +4,6 @@ import { model } from '../helpers/db/repository';
 import { Post } from '../models/Post';
 import { Like } from '../models/Likes';
 import { Comment } from '../models/Comment';
-import { CommentLike } from '../models/CommentLike';
 import { User } from '../models/User';
 
 async function createPost(req: express.Request, res: express.Response) {
@@ -133,7 +132,7 @@ async function updateComment(req: express.Request, res: express.Response) {
 }
 
 async function likeComment(req: express.Request, res: express.Response) {
-  const like = await model(CommentLike).findOne({
+  const like = await model(Like).findOne({
     comment: req.body.commentId,
     user: req.user.id,
   });
@@ -144,7 +143,7 @@ async function likeComment(req: express.Request, res: express.Response) {
   const comment = await model(Comment).findOne({ id: req.body.commentId });
   const user = await model(User).findOne({ id: req.user.id });
 
-  await model(CommentLike).save({ comment, user });
+  await model(Like).save({ comment, user });
 
   return res.status(200).json({
     msg: 'Successful liked',

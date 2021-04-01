@@ -9,7 +9,6 @@ import {
 import { Exclude } from 'class-transformer';
 import { Post } from './Post';
 import { Like } from './Likes';
-import { CommentLike } from './CommentLike';
 import { Comment } from './Comment';
 
 @Entity('users')
@@ -34,9 +33,6 @@ export class User {
 
     @OneToMany(() => Comment, (comment) => comment.user, { onDelete: 'CASCADE' })
     comments: Comment[]
-
-    @OneToMany(() => CommentLike, (commentLike) => commentLike.user, { onDelete: 'CASCADE' })
-    commentLikes: CommentLike[]
 
     @CreateDateColumn()
     createdAt: Date;
