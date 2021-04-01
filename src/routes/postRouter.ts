@@ -15,7 +15,7 @@ import {
 } from '../controllers/postController';
 import { authMiddleware } from '../middlewares/authMiddleware';
 import { validatorMiddleware } from '../middlewares/validatorMiddleware';
-import { postSchemas } from '../helpers/validation/postSchemas';
+import { postSchemas } from '../validation/postSchemas';
 
 const postRouter = express.Router();
 

@@ -1,6 +1,6 @@
 import * as express from 'express';
 import * as eah from 'express-async-handler';
-import { authValidation } from '../helpers/validation/authSchemas';
+import { authValidation } from '../validation/authSchemas';
 import { authMiddleware } from '../middlewares/authMiddleware';
 import { signUp, signIn, signOut } from '../controllers/authController';
 import { validatorMiddleware } from '../middlewares/validatorMiddleware';
