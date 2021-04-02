@@ -4,9 +4,8 @@ import {
   Column,
   UpdateDateColumn,
   CreateDateColumn,
-  OneToMany, JoinColumn,
+  OneToMany,
 } from 'typeorm';
-import { Exclude } from 'class-transformer';
 import { Post } from './Post';
 import { Like } from './Likes';
 import { Comment } from './Comment';

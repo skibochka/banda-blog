@@ -5,6 +5,7 @@ import { Post } from '../models/Post';
 import { Like } from '../models/Likes';
 import { Comment } from '../models/Comment';
 import { User } from '../models/User';
+import { IPost } from '../interfaces/IPost';
 
 async function createPost(req: express.Request, res: express.Response) {
   const user = await model(User).findOne(req.user.id);
@@ -50,15 +51,14 @@ async function updatePost(req: express.Request, res: express.Response) {
 }
 
 async function likePost(req: express.Request, res: express.Response) {
-  if (await model(Like).findOne({
-    post: req.body.postId,
-    user: req.user.id,
-  })) throw new Conflict('You have already liked this post');
-
   const post = await model(Post).findOne({ id: req.body.postId });
   const user = await model(User).findOne({ id: req.user.id });
 
-  await model(Like).save({ post, user });
+  await model(Like).save({
+    user,
+    entityType: 'post',
+    entityId: post.id,
+  });
 
   return res.status(200).json({
     msg: 'Successful liked',
@@ -66,16 +66,25 @@ async function likePost(req: express.Request, res: express.Response) {
 }
 
 async function getPost(req: express.Request, res: express.Response) {
-  const post: Post = await model(Post).findOne(req.query.postId as string, { loadRelationIds: true });
+  const post: IPost = await model(Post).findOne(req.query.postId as string);
   if (!post) {
     throw new NotFound('Such post does not exist');
   }
+  post.likes = await model(Like).count({
+    where: {
+      entityType: 'post',
+      entityId: post.id,
+    },
+  });
 
   return res.status(200).json(post);
 }
 
 async function getComments(req: express.Request, res: express.Response) {
-  const comments = await model(Comment).find({ where: { post: +req.query.postId }, loadRelationIds: true });
+  const comments = await model(Comment).find({
+    where: { post: +req.query.postId },
+    loadRelationIds: true,
+  });
 
   return res.status(200).send(comments);
 }
@@ -132,18 +141,14 @@ async function updateComment(req: express.Request, res: express.Response) {
 }
 
 async function likeComment(req: express.Request, res: express.Response) {
-  const like = await model(Like).findOne({
-    comment: req.body.commentId,
-    user: req.user.id,
-  });
-  if (like) {
-    throw new Conflict('You have already liked this comment');
-  }
-
   const comment = await model(Comment).findOne({ id: req.body.commentId });
   const user = await model(User).findOne({ id: req.user.id });
 
-  await model(Like).save({ comment, user });
+  await model(Like).save({
+    user,
+    entityType: 'comment',
+    entityId: comment.id,
+  });
 
   return res.status(200).json({
     msg: 'Successful liked',

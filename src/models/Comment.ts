@@ -4,9 +4,8 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
-  ManyToOne, OneToMany,
+  ManyToOne,
 } from 'typeorm';
-import { Like } from './Likes';
 import { Post } from './Post';
 import { User } from './User';
 
@@ -18,13 +17,10 @@ export class Comment {
   @Column()
   content: string;
 
-  @ManyToOne(() => User, (user) => user.comments, { onDelete: 'CASCADE' })
+  @ManyToOne(() => User, (user) => user.comments)
   user: User;
 
-  @OneToMany(() => Like, (like) => like.comment, { onDelete: 'CASCADE' })
-  likes: Like[];
-
-  @ManyToOne(() => Post, (posts) => posts.comments, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Post, (posts) => posts.comments)
   post: Post;
 
   @CreateDateColumn()

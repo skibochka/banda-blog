@@ -6,7 +6,6 @@ import {
   CreateDateColumn,
   OneToMany, ManyToOne,
 } from 'typeorm';
-import { Like } from './Likes';
 import { Comment } from './Comment';
 import { User } from './User';
 
@@ -26,9 +25,6 @@ export class Post {
 
   @OneToMany(() => Comment, (comment) => comment.post, { onDelete: 'CASCADE' })
   comments: Comment[];
-
-  @OneToMany(() => Like, (like) => like.post, { onDelete: 'CASCADE' })
-  likes: Like[];
 
   @CreateDateColumn()
   createdAt: Date;
