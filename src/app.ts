@@ -1,8 +1,8 @@
 import * as express from 'express';
 import { createConnection } from 'typeorm';
 import 'dotenv/config';
-import postRouter from './routes/postRouter';
 import authRouter from './routes/authRouter';
+import postRouter from './routes/postRouter';
 import morgan = require('morgan');
 import bodyParser = require('body-parser');
 import helmet = require('helmet');
@@ -29,9 +29,9 @@ export const appPromise = (async (): Promise<express.Application> => {
       message: `Route ${req.url} not found`,
     });
   });
-  // app.use((err: express.ErrorRequestHandler, req: express.Request, res: express.Response, next:express.NextFunction) => {
-  //   return res.status(500).send({ error: err });
-  // });
+  app.use((err: express.ErrorRequestHandler, req: express.Request, res: express.Response, next:express.NextFunction) => {
+    return res.status(500).send({ error: err });
+  });
 
   return app;
 });
