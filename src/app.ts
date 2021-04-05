@@ -1,8 +1,8 @@
 import * as express from 'express';
 import { createConnection } from 'typeorm';
 import 'dotenv/config';
-import authRouter from './routes/authRouter';
 import postRouter from './routes/postRouter';
+import authRouter from './routes/authRouter';
 import morgan = require('morgan');
 import bodyParser = require('body-parser');
 import helmet = require('helmet');
@@ -13,12 +13,12 @@ export const appPromise = (async (): Promise<express.Application> => {
 
   await createConnection();
 
-  app.use(morgan('combined'));
+  app.use(helmet());
+  app.use(cors());
   app.use(bodyParser.json({
     inflate: true,
   }));
-  app.use(helmet());
-  app.use(cors());
+  app.use(morgan('combined'));
 
   app.use('/auth', authRouter);
   app.use('/post', postRouter);
