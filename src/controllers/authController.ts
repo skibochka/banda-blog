@@ -3,10 +3,10 @@ import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
 import * as Redis from 'ioredis';
 import { Conflict, NotFound, Unauthorized } from 'http-errors';
-import jwtConfig from '../config/jwt';
+import jwtConfig from '../../../umbrella.me/src/config/jwt';
 import { model } from '../helpers/db/repository';
 import { User } from '../models/User';
-import { redisConfiguration } from '../config/redis';
+import { redisConfiguration } from '../../../umbrella.me/src/config/redis';
 
 async function signUp(req: express.Request, res: express.Response) {
   const userExist: User = await model(User).findOne({ login: req.body.login });
