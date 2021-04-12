@@ -6,6 +6,8 @@ import { Like } from '../models/Likes';
 import { Comment } from '../models/Comment';
 import { User } from '../models/User';
 import { IPost } from '../interfaces/IPost';
+import redisConnection from '../redis/redisConnection';
+import { redisConfiguration } from '../config/redis';
 
 async function createPost(req: express.Request, res: express.Response) {
   const user = await model(User).findOne(req.user.id);
@@ -76,6 +78,9 @@ async function getPost(req: express.Request, res: express.Response) {
       entityId: post.id,
     },
   });
+
+  // const redis = redisConnection();
+  // await redis.set(req.url, JSON.stringify(post), 'EX', redisConfiguration.cacheExpirationTime);
 
   return res.status(200).json(post);
 }

@@ -3,4 +3,5 @@ export const redisConfiguration = {
   redisPort: process.env.REDIS_PORT,
   refreshExpirationTime: 86400,
   accessExpirationTime: 3000,
+  cacheExpirationTime: 600,
 };

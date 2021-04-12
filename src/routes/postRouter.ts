@@ -16,12 +16,13 @@ import {
 import { authMiddleware } from '../middlewares/authMiddleware';
 import { validatorMiddleware } from '../middlewares/validatorMiddleware';
 import { postSchemas } from '../validation/postSchemas';
+import cacheMiddleware from '../middlewares/cacheMiddleware';
 
 const postRouter = express.Router();
 
 postRouter.get('/', validatorMiddleware(postSchemas.getPosts), eah(getPosts));
 
-postRouter.get('/get', validatorMiddleware(postSchemas.checkPostId), eah(getPost));
+postRouter.get('/get', validatorMiddleware(postSchemas.checkPostId), eah(cacheMiddleware), eah(getPost));
 
 postRouter.get('/comments', validatorMiddleware(postSchemas.checkPostId), eah(getComments));
 
