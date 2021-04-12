@@ -1,12 +1,12 @@
 import * as express from 'express';
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
-import * as Redis from 'ioredis';
 import { Conflict, NotFound, Unauthorized } from 'http-errors';
 import jwtConfig from '../../../umbrella.me/src/config/jwt';
 import { model } from '../helpers/db/repository';
 import { User } from '../models/User';
 import { redisConfiguration } from '../../../umbrella.me/src/config/redis';
+import redisConnection from '../redis/redisConnection';
 
 async function signUp(req: express.Request, res: express.Response) {
   const userExist: User = await model(User).findOne({ login: req.body.login });
@@ -44,7 +44,7 @@ async function signIn(req: express.Request, res: express.Response) {
 }
 
 async function signOut(req: express.Request, res: express.Response) {
-  const redis: Redis = new Redis(`redis://${redisConfiguration.redisUrl}:${redisConfiguration.redisPort}`);
+  const redis = redisConnection();
 
   await redis.set(req.body.access, 'access', 'EX', redisConfiguration.accessExpirationTime);
   await redis.set(req.body.refresh, 'refresh', 'EX', redisConfiguration.refreshExpirationTime);
