@@ -1,3 +1,3 @@
 export const appConfiguration = {
-  port: process.env.APP_PORT,
+  port: process.env.APP_PORT || 80,
 };
