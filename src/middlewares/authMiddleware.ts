@@ -1,7 +1,7 @@
 import { Unauthorized, BadRequest } from 'http-errors';
 import * as express from 'express';
 import * as jwt from 'jsonwebtoken';
-import jwtConfig from '../../../umbrella.me/src/config/jwt';
+import jwtConfig from '../config/jwt';
 import redisConnection from '../redis/redisConnection';
 
 export async function authMiddleware(req: express.Request, res: express.Response, next: express.NextFunction) {

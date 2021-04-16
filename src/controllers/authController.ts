@@ -2,10 +2,10 @@ import * as express from 'express';
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
 import { Conflict, NotFound, Unauthorized } from 'http-errors';
-import jwtConfig from '../../../umbrella.me/src/config/jwt';
+import jwtConfig from '../config/jwt';
 import { model } from '../helpers/db/repository';
 import { User } from '../models/User';
-import { redisConfiguration } from '../../../umbrella.me/src/config/redis';
+import { redisConfiguration } from '../config/redis';
 import redisConnection from '../redis/redisConnection';
 
 async function signUp(req: express.Request, res: express.Response) {

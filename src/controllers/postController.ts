@@ -79,8 +79,8 @@ async function getPost(req: express.Request, res: express.Response) {
     },
   });
 
-  // const redis = redisConnection();
-  // await redis.set(req.url, JSON.stringify(post), 'EX', redisConfiguration.cacheExpirationTime);
+  const redis = redisConnection();
+  await redis.set(req.url, JSON.stringify(post), 'EX', redisConfiguration.cacheExpirationTime);
 
   return res.status(200).json(post);
 }
