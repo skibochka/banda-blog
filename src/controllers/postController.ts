@@ -27,7 +27,7 @@ async function createPost(req: express.Request, res: express.Response) {
 async function deletePost(req: express.Request, res: express.Response) {
   if (!req.user.isAdmin) {
     const user = await model(User).findOne(req.user.id);
-    const post: Post = await model(Post).findOne({ id: req.body.postId, user });
+    const post = await model(Post).findOne({ id: req.body.postId, user });
     if (!post) throw new Conflict('You can`t delete posts of other users');
   }
 
@@ -41,7 +41,7 @@ async function deletePost(req: express.Request, res: express.Response) {
 async function updatePost(req: express.Request, res: express.Response) {
   if (!req.user.isAdmin) {
     const user = await model(User).findOne(req.user.id);
-    const post: Post = await model(Post).findOne({ id: req.body.postId, user });
+    const post = await model(Post).findOne({ id: req.body.postId, user });
     if (!post) throw new Conflict('You can`t update posts of other users');
   }
 
@@ -54,6 +54,10 @@ async function updatePost(req: express.Request, res: express.Response) {
 
 async function likePost(req: express.Request, res: express.Response) {
   const post = await model(Post).findOne({ id: req.body.postId });
+  if (!post) {
+    throw new NotFound('Such post does not exist');
+  }
+
   const user = await model(User).findOne({ id: req.user.id });
 
   await model(Like).save({
@@ -68,7 +72,7 @@ async function likePost(req: express.Request, res: express.Response) {
 }
 
 async function getPost(req: express.Request, res: express.Response) {
-  const post: IPost = await model(Post).findOne(req.query.postId as string);
+  const post: IPost = await model(Post).findOne(req.query.postId as string) as Post;
   if (!post) {
     throw new NotFound('Such post does not exist');
   }
@@ -87,7 +91,7 @@ async function getPost(req: express.Request, res: express.Response) {
 
 async function getComments(req: express.Request, res: express.Response) {
   const comments = await model(Comment).find({
-    where: { post: +req.query.postId },
+    where: { post: +(req.query.postId || '0') },
     loadRelationIds: true,
   });
 
@@ -96,8 +100,8 @@ async function getComments(req: express.Request, res: express.Response) {
 
 async function getPosts(req: express.Request, res: express.Response) {
   const posts: Post[] = await model(Post).find({
-    skip: +req.query.skip * +req.query.page,
-    take: +req.query.take,
+    skip: +(req.query.skip || '0') * +(req.query.page || '0'),
+    take: +(req.query.take || '25'),
   });
   if (!posts) {
     throw new NotFound('Posts not found');
@@ -121,7 +125,7 @@ async function createComment(req: express.Request, res: express.Response) {
 
 async function deleteComment(req: express.Request, res: express.Response) {
   if (!req.user.isAdmin) {
-    const comment: Comment = await model(Comment).findOne({ id: req.body.commentId, user: req.user.id });
+    const comment = await model(Comment).findOne({ id: req.body.commentId, user: req.user.id });
     if (!comment) throw new Conflict('You can`t delete comments of other users');
   }
 
@@ -134,7 +138,7 @@ async function deleteComment(req: express.Request, res: express.Response) {
 
 async function updateComment(req: express.Request, res: express.Response) {
   if (!req.user.isAdmin) {
-    const comment: Comment = await model(Comment).findOne({ id: req.body.commentId, user: req.user.id });
+    const comment = await model(Comment).findOne({ id: req.body.commentId, user: req.user.id });
     if (!comment) throw new Conflict('You can`t update comments of other users');
   }
 
@@ -147,6 +151,9 @@ async function updateComment(req: express.Request, res: express.Response) {
 
 async function likeComment(req: express.Request, res: express.Response) {
   const comment = await model(Comment).findOne({ id: req.body.commentId });
+  if (!comment) {
+    throw new NotFound('Such post does not exist');
+  }
   const user = await model(User).findOne({ id: req.user.id });
 
   await model(Like).save({

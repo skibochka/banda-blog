@@ -1,5 +1,5 @@
 {
-   "name": "express-ts",
+   "name": "banda-blog",
    "version": "1.0.0",
    "description": "",
    "main": "index.js",
@@ -11,6 +11,17 @@
    "author": "",
    "license": "ISC",
    "dependencies": {
+      "@types/bcrypt": "^3.0.1",
+      "@types/body-parser": "^1.19.0",
+      "@types/cors": "^2.8.10",
+      "@types/express": "^4.17.11",
+      "@types/http-errors": "^1.8.0",
+      "@types/ioredis": "^4.22.3",
+      "@types/jsonwebtoken": "^8.5.1",
+      "@types/morgan": "^1.9.2",
+      "@types/node": "^8.0.29",
+      "@typescript-eslint/eslint-plugin": "^2.27.0",
+      "@typescript-eslint/parser": "^2.27.0",
       "bcrypt": "^5.0.1",
       "body-parser": "^1.19.0",
       "class-transformer": "^0.4.0",
@@ -30,12 +41,6 @@
       "typeorm": "0.2.31"
    },
    "devDependencies": {
-      "@types/body-parser": "^1.19.0",
-      "@types/express": "^4.17.11",
-      "@types/http-errors": "^1.8.0",
-      "@types/node": "^8.0.29",
-      "@typescript-eslint/eslint-plugin": "^2.27.0",
-      "@typescript-eslint/parser": "^2.27.0",
       "commitizen": "^4.0.3",
       "cz-conventional-changelog": "3.1.0",
       "eslint": "^6.8.0",

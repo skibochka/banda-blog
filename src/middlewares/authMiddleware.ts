@@ -1,10 +1,10 @@
 import { Unauthorized, BadRequest } from 'http-errors';
 import * as express from 'express';
-import * as jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import jwtConfig from '../config/jwt';
 import redisConnection from '../redis/redisConnection';
 
-export async function authMiddleware(req: express.Request, res: express.Response, next: express.NextFunction) {
+export async function authMiddleware(req: express.Request, _res: express.Response, next: express.NextFunction) {
   if (!req.headers.authorization) {
     throw new BadRequest('No authorization header');
   }
@@ -20,7 +20,7 @@ export async function authMiddleware(req: express.Request, res: express.Response
     throw new Unauthorized('Invalid token');
   }
 
-  const userPayload = jwt.verify(token, jwtConfig.secret);
+  const userPayload: any = jwt.verify(token, jwtConfig.secret);
 
   req.user = {
     id: userPayload.id,

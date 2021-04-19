@@ -9,7 +9,7 @@ import { redisConfiguration } from '../config/redis';
 import redisConnection from '../redis/redisConnection';
 
 async function signUp(req: express.Request, res: express.Response) {
-  const userExist: User = await model(User).findOne({ login: req.body.login });
+  const userExist = await model(User).findOne({ login: req.body.login });
   if (userExist) {
     throw new Conflict('Sorry such user is already exist');
   }
@@ -24,7 +24,7 @@ async function signUp(req: express.Request, res: express.Response) {
 }
 
 async function signIn(req: express.Request, res: express.Response) {
-  const user: User = await model(User).findOne({ login: req.body.login });
+  const user = await model(User).findOne({ login: req.body.login });
   if (!user) {
     throw new NotFound('Sorry such user does not exist');
   }
