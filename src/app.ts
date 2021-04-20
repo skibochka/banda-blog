@@ -22,7 +22,7 @@ export const appPromise = (async (): Promise<express.Application> => {
 
   app.get('/test', (_req, res) => {
     return res.status(200).json({
-      msg: 'Test completed successful',
+      msg: 'Test completed',
     });
   });
   app.use('/auth', authRouter);
