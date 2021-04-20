@@ -20,6 +20,11 @@ export const appPromise = (async (): Promise<express.Application> => {
   }));
   app.use(morgan('combined'));
 
+  app.get('/test', (_req, res) => {
+    return res.status(200).json({
+      msg: 'Test completed',
+    });
+  });
   app.use('/auth', authRouter);
   app.use('/post', postRouter);
 
