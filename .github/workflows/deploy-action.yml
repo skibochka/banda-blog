@@ -16,7 +16,7 @@ jobs:
             touch .env
             echo "${{ secrets.DOT_ENV }}" >> .env
             touch ormconfig.yaml
-            echo "${{ secrets.ORM_CONFIG }}" >> ormconfig.json
+            echo "${{ secrets.ORM_CONFIG }}" >> ormconfig.yaml
             npm install
             tsc
             pm2 start build/index.js
