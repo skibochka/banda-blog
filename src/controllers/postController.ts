@@ -125,7 +125,7 @@ async function createComment(req: express.Request, res: express.Response) {
 
 async function deleteComment(req: express.Request, res: express.Response) {
   if (!req.user.isAdmin) {
-    const comment = await model(Comment).findOne({ id: req.body.commentId, user: req.user.id });
+    const comment = await model(Comment).findOne({ where: { id: req.body.commentId, user: req.user.id } });
     if (!comment) throw new Conflict('You can`t delete comments of other users');
   }
 
@@ -138,7 +138,7 @@ async function deleteComment(req: express.Request, res: express.Response) {
 
 async function updateComment(req: express.Request, res: express.Response) {
   if (!req.user.isAdmin) {
-    const comment = await model(Comment).findOne({ id: req.body.commentId, user: req.user.id });
+    const comment = await model(Comment).findOne({ where: { id: req.body.commentId, user: req.user.id } });
     if (!comment) throw new Conflict('You can`t update comments of other users');
   }
 

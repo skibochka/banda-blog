@@ -48,7 +48,6 @@ async function signOut(req: express.Request, res: express.Response) {
 
   await redis.set(req.body.access, 'access', 'EX', redisConfiguration.accessExpirationTime);
   await redis.set(req.body.refresh, 'refresh', 'EX', redisConfiguration.refreshExpirationTime);
-
   res.status(200).json({
     msg: 'Logged out',
   });

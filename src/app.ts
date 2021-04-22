@@ -11,7 +11,7 @@ import cors from 'cors';
 export const appPromise = (async (): Promise<express.Application> => {
   const app = express();
 
-  await createConnection();
+  await createConnection(process.env.CURRENT_CONNECTION_NAME as string);
 
   app.use(helmet());
   app.use(cors());
