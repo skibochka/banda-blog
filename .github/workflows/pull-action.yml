@@ -1,13 +1,7 @@
 name: Pull action
 on: [push]
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Test NodesJS app
-      - run: npm run test
   deploy:
-    needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Pull NodeJS app
