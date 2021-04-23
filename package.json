@@ -6,7 +6,7 @@
    "scripts": {
       "start": "nodemon --watch '**/*.ts' --exec 'ts-node' src/index.ts",
       "migrate": "ts-node ./node_modules/typeorm/cli.js migration:run",
-      "test": "jest"
+      "test": "jest __tests__/index.test.ts"
    },
    "keywords": [],
    "author": "",

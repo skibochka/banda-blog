@@ -1,7 +1,7 @@
-import supertestInstance from '../src/helpers/tests/supertestInstance';
+import supertestInstance from '../../src/helpers/tests/supertestInstance';
 import supertest from 'supertest';
-import { getDefaultAccessToken } from '../src/helpers/tests/getAccessToken';
-import initDatabase from '../src/helpers/tests/initDatabase';
+import { getDefaultAccessToken } from '../../src/helpers/tests/getAccessToken';
+import { initDefaultUserDatabase } from '../../src/helpers/tests/initDatabase';
 
 let agent: supertest.SuperTest<supertest.Test>;
 let defaultAccessToken: string;
@@ -12,8 +12,8 @@ let testCommentId: number;
 describe('Default user blog functionality tests', () => {
   beforeAll(async () => {
     agent = await supertestInstance();
-    await initDatabase();
-    defaultAccessToken = getDefaultAccessToken();
+    await initDefaultUserDatabase();
+    defaultAccessToken = await getDefaultAccessToken();
   });
 
   test('Create post test', (done) => {

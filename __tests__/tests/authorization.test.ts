@@ -1,4 +1,4 @@
-import supertestInstance from '../src/helpers/tests/supertestInstance';
+import supertestInstance from '../../src/helpers/tests/supertestInstance';
 import supertest from 'supertest';
 
 let agent: supertest.SuperTest<supertest.Test>;
@@ -14,7 +14,7 @@ describe('Authorization tests', () => {
     agent
       .post('/auth/sign-up')
       .send({
-        login: 'authTest',
+        login: 'authorizationTest',
         password: 'test',
       })
       .expect(200)
@@ -29,7 +29,7 @@ describe('Authorization tests', () => {
     agent
       .post('/auth/sign-in')
       .send({
-        login: 'authTest',
+        login: 'authorizationTest',
         password: 'test',
       })
       .expect(200)
