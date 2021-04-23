@@ -39,3 +39,23 @@ export async function initAdminUserDatabase() {
   await redis.set('testAdminPostId', testPost.id);
   await redis.set('testAdminCommentId', testComment.id);
 }
+
+export async function initUserErrorsDatabase() {
+  const defaultUser = await model(User).save({
+    login: 'testUserErrors',
+    password: 'test',
+  });
+  const testPost = await model(Post).save({
+    title: 'User error test',
+    content: 'admin test',
+    user: defaultUser,
+  });
+  const testComment = await model(Comment).save({
+    content: 'User error test',
+    post: testPost,
+    user: defaultUser,
+  });
+
+  await redis.set('testUserErrorsPostId', testPost.id);
+  await redis.set('testUserErrorsCommentId', testComment.id);
+}
