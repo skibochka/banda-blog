@@ -59,3 +59,36 @@ export async function initUserErrorsDatabase() {
   await redis.set('testUserErrorsPostId', testPost.id);
   await redis.set('testUserErrorsCommentId', testComment.id);
 }
+
+export async function initGettingPostsDataBase() {
+  const defaultUser = await model(User).save({
+    login: 'testGettingPosts',
+    password: 'test',
+  });
+  const testPost = await model(Post).save({
+    title: 'Getting posts test',
+    content: 'get test',
+    user: defaultUser,
+  });
+  await model(Post).save({
+    title: 'Getting posts test',
+    content: 'get test',
+    user: defaultUser,
+  });
+  await model(Post).save({
+    title: 'Getting posts test',
+    content: 'get test',
+    user: defaultUser,
+  });
+  await model(Comment).save({
+    content: 'Getting comments test',
+    post: testPost,
+    user: defaultUser,
+  });
+  await model(Comment).save({
+    content: 'Getting comments test',
+    post: testPost,
+    user: defaultUser,
+  });
+  await redis.set('gettingPostId', testPost.id);
+}

@@ -17,3 +17,8 @@ require('./tests/adminUserBlog.test');
 // * CHECK USER ERRORS
 // ********************************
 require('./tests/defaultUserErrors.test');
+
+// ********************************
+// * CHECK GETTING POSTS
+// ********************************
+require('./tests/gettingPosts.test');
