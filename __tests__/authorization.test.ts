@@ -1,21 +1,20 @@
 import supertestInstance from '../src/helpers/tests/supertestInstance';
-import { unlinkSync } from 'fs';
+import supertest from 'supertest';
 
+let agent: supertest.SuperTest<supertest.Test>;
 let access: string;
 let refresh: string;
 
 describe('Authorization tests', () => {
-  afterAll((done) => {
-    unlinkSync('blog.db');
-    done();
+  beforeEach(async () => {
+    agent = await supertestInstance();
   });
 
-  test('Sign-up test', async (done) => {
-    const agent = await supertestInstance();
+  test('Sign-up test', (done) => {
     agent
       .post('/auth/sign-up')
       .send({
-        login: 'test',
+        login: 'authTest',
         password: 'test',
       })
       .expect(200)
@@ -26,12 +25,11 @@ describe('Authorization tests', () => {
       });
   });
 
-  test('Sign-in test', async (done) => {
-    const agent = await supertestInstance();
+  test('Sign-in test', (done) => {
     agent
       .post('/auth/sign-in')
       .send({
-        login: 'test',
+        login: 'authTest',
         password: 'test',
       })
       .expect(200)
@@ -45,8 +43,7 @@ describe('Authorization tests', () => {
       });
   });
 
-  test('Sign-out test', async (done) => {
-    const agent = await supertestInstance();
+  test('Sign-out test', (done) => {
     agent
       .post('/auth/sign-out')
       .set('Authorization', `Bearer ${access}`)

@@ -12,13 +12,14 @@ import { redisConfiguration } from '../config/redis';
 async function createPost(req: express.Request, res: express.Response) {
   const user = await model(User).findOne(req.user.id);
 
-  await model(Post).save({
+  const post = await model(Post).save({
     title: req.body.title,
     content: req.body.content,
     user,
   });
 
   return res.status(200).json({
+    id: post.id,
     title: req.body.title,
     content: req.body.content,
   });
@@ -31,7 +32,7 @@ async function deletePost(req: express.Request, res: express.Response) {
     if (!post) throw new Conflict('You can`t delete posts of other users');
   }
 
-  await model(Post).delete(req.body.postId);
+  await model(Post).delete({ id: req.body.postId });
 
   return res.status(200).json({
     msg: 'Post successful deleted',
@@ -114,13 +115,16 @@ async function createComment(req: express.Request, res: express.Response) {
   const user = await model(User).findOne({ id: req.user.id });
   const post = await model(Post).findOne({ id: req.body.postId });
 
-  await model(Comment).save({
+  const comment = await model(Comment).save({
     content: req.body.content,
     post,
     user,
   });
 
-  return res.status(200).json({ content: req.body.content });
+  return res.status(200).json({
+    id: comment.id,
+    content: req.body.content,
+  });
 }
 
 async function deleteComment(req: express.Request, res: express.Response) {
@@ -129,7 +133,7 @@ async function deleteComment(req: express.Request, res: express.Response) {
     if (!comment) throw new Conflict('You can`t delete comments of other users');
   }
 
-  await model(Comment).delete({ id: 32 });
+  await model(Comment).delete({ id: req.body.commentId });
 
   return res.status(200).json({
     msg: 'Comment successful deleted',

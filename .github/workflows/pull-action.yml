@@ -13,6 +13,7 @@ jobs:
           script: |
             cd ~/banda-blog/
             git pull
+            rm -rf ormconfig.ts
             npm install
             tsc
             pm2 restart build/index.js
