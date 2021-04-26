@@ -4,6 +4,12 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v1
+      - name: Test NodeJs app
+        uses: actions/setup-node@v1
+        run: |
+        npm install
+        npm test
       - name: Pull NodeJS app
         uses: appleboy/ssh-action@v0.1.2
         with:
