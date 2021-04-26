@@ -7,6 +7,17 @@ jobs:
       matrix:
         node-version: [ 8.x, 10.x, 12.x ]
     steps:
+      - name: set envs
+        uses: allenevans/set-env@v2.0.0
+        with:
+          CURRENT_CONNECTION_NAME: test
+          TEST_ORM_CONNECTION_NAME: test
+          TEST_ORM_TYPE: sqlite
+          TEST_ORM_DATABASE: blog.db
+          TEST_ORM_ENTITIES: src/models/**/*.ts
+          TEST_ORM_MIGRATIONS: src/migrations/**/*.ts
+          TEST_ORM_ENTITIES_DIR: src/models
+          TEST_ORM_MIGRATIONS_DIR: src/migrations
       - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
@@ -16,8 +27,6 @@ jobs:
         run: |
           npm install
           npm test
-        env:
-          CI: true
   deploy:
     needs: [test]
     runs-on: ubuntu-latest
