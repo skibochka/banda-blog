@@ -7,10 +7,12 @@ jobs:
       matrix:
         node-version: [10.x]
     steps:
-      - name: set up redis
-        uses: shogo82148/actions-setup-redis@v1
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
         with:
-          redis-version: '6.x'
+          node-version: ${{ matrix.node-version }}
+
       - name: set envs
         uses: allenevans/set-env@v2.0.0
         with:
@@ -22,11 +24,7 @@ jobs:
           TEST_ORM_MIGRATIONS: src/migrations/**/*.ts
           TEST_ORM_ENTITIES_DIR: src/models
           TEST_ORM_MIGRATIONS_DIR: src/migrations
-      - uses: actions/checkout@v2
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
-        with:
-          node-version: ${{ matrix.node-version }}
+
       - name: npm install and test
         run: |
           npm install
