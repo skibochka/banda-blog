@@ -1,6 +1,16 @@
 name: Pull action
 on: [push]
 jobs:
+  container-job:
+    runs-on: ubuntu-latest
+    container: node:10.18-jessie
+    services:
+      redis:
+        image: redis
+        options: >-
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
   test:
     runs-on: ubuntu-latest
     strategy:
@@ -12,11 +22,6 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-
-      - name: Start Redis
-        uses: supercharge/redis-github-action@1.2.0
-        with:
-          redis-version: 5
 
       - name: set envs
         uses: allenevans/set-env@v2.0.0
