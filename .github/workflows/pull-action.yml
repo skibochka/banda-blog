@@ -7,6 +7,11 @@ jobs:
       matrix:
         node-version: [10.x]
     steps:
+      - name: set up redis
+        uses: shogo82148/actions-setup-redis@v1
+        with:
+          redis-version: '6.x'
+        run: redis-cli ping
       - name: set envs
         uses: allenevans/set-env@v2.0.0
         with:
