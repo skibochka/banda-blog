@@ -5,4 +5,3 @@ module.exports = {
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
 };
-jest.setTimeout(30000);
