@@ -34,8 +34,8 @@ export const appPromise = (async (): Promise<express.Application> => {
       message: `Route ${req.url} not found`,
     });
   });
-  app.use((err: express.ErrorRequestHandler, _req: express.Request, _res: express.Response, _next: express.NextFunction) => {
-    console.error(err);
+  app.use((err: express.ErrorRequestHandler, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
+    return res.status(500).send({ error: err });
   });
 
   return app;

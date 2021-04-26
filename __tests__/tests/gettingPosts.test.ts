@@ -15,7 +15,7 @@ describe('Check getting posts and comments', () => {
     testPostId = await redis.get('gettingPostId') as string;
   });
 
-  test('Check getting post by pagination', () => {
+  test('Check getting post by pagination', (done) => {
     agent
       .get('/post')
       .query({
@@ -23,24 +23,33 @@ describe('Check getting posts and comments', () => {
         take: 3,
         page: 0,
       })
-      .expect(200);
+      .expect(200)
+      .then(() => {
+        done();
+      });
   });
 
-  test('Check getting post by id', () => {
+  test('Check getting post by id', (done) => {
     agent
       .get('/post/get')
       .query({
         postId: +testPostId,
       })
-      .expect(200);
+      .expect(200)
+      .then(() => {
+        done();
+      });
   });
 
-  test('Get comments by post id', () => {
+  test('Get comments by post id', (done) => {
     agent
       .get('/post/comments')
       .query({
         postId: +testPostId,
       })
-      .expect(200);
+      .expect(200)
+      .then(() => {
+        done();
+      });
   });
 });

@@ -5,8 +5,8 @@ import { Conflict, NotFound, Unauthorized } from 'http-errors';
 import jwtConfig from '../config/jwt';
 import { model } from '../helpers/db/repository';
 import { User } from '../models/User';
-// import { redisConfiguration } from '../config/redis';
-// import redisConnection from '../redis/redisConnection';
+import { redisConfiguration } from '../config/redis';
+import redisConnection from '../redis/redisConnection';
 
 async function signUp(req: express.Request, res: express.Response) {
   const userExist = await model(User).findOne({ login: req.body.login });
@@ -43,11 +43,11 @@ async function signIn(req: express.Request, res: express.Response) {
   });
 }
 
-async function signOut(_req: express.Request, res: express.Response) {
-  // const redis = redisConnection();
-  //
-  // await redis.set(req.body.access, 'access', 'EX', redisConfiguration.accessExpirationTime);
-  // await redis.set(req.body.refresh, 'refresh', 'EX', redisConfiguration.refreshExpirationTime);
+async function signOut(req: express.Request, res: express.Response) {
+  const redis = redisConnection();
+
+  await redis.set(req.body.access, 'access', 'EX', redisConfiguration.accessExpirationTime);
+  await redis.set(req.body.refresh, 'refresh', 'EX', redisConfiguration.refreshExpirationTime);
   res.status(200).json({
     msg: 'Logged out',
   });
