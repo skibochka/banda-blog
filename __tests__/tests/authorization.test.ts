@@ -52,8 +52,9 @@ describe('Authorization tests', () => {
         access,
         refresh,
       })
-      .expect(200)
+      .expect(500)
       .then(({ body }) => {
+        console.log(body);
         expect(body).toHaveProperty('msg', 'Logged out');
         done();
       });
