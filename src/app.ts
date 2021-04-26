@@ -35,6 +35,7 @@ export const appPromise = (async (): Promise<express.Application> => {
     });
   });
   app.use((err: express.ErrorRequestHandler, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
+    console.error(err);
     return res.status(500).send({ error: err });
   });
 
