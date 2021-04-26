@@ -1,33 +1,15 @@
 name: Pull action
 on: [push]
 jobs:
-  container-job:
-    runs-on: ubuntu-latest
-    container: node:10.18-jessie
-
-    services:
-      redis:
-        image: redis
-
-    steps:
-      - name: Check out repository code
-        uses: actions/checkout@v2
-
-      - name: Install dependencies
-        run: npm i
-
-      - name: Connect to Redis
-        run: node client.js
-        env:
-          REDIS_HOST: redis
-          REDIS_PORT: 6379
   test:
-    needs: [container-job]
     runs-on: ubuntu-latest
     strategy:
       matrix:
         node-version: [10.x]
     steps:
+      - uses: vishnudxb/redis-cluster@1.0.5
+        with:
+          master1-port: 6375
       - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
