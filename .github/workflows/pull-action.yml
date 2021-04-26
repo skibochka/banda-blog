@@ -9,7 +9,7 @@ jobs:
         uses: actions/setup-node@v1
         run: |
         npm install
-        npm test
+        npm run test
       - name: Pull NodeJS app
         uses: appleboy/ssh-action@v0.1.2
         with:
