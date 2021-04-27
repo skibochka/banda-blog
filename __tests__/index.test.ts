@@ -8,15 +8,15 @@ require('./tests/authorization.test');
 // ********************************
 require('./tests/defaultUserBlog.test');
 
-// // ********************************
-// // * CHECK DEFAULT ADMIN BLOG LOGIC
-// // ********************************
-// require('./tests/adminUserBlog.test');
-//
-// // ********************************
-// // * CHECK USER ERRORS
-// // ********************************
-// require('./tests/defaultUserErrors.test');
+// ********************************
+// * CHECK DEFAULT ADMIN BLOG LOGIC
+// ********************************
+require('./tests/adminUserBlog.test');
+
+// ********************************
+// * CHECK USER ERRORS
+// ********************************
+require('./tests/defaultUserErrors.test');
 
 // ********************************
 // * CHECK GETTING POSTS

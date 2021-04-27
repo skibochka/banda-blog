@@ -1,15 +1,13 @@
 import * as jwt from 'jsonwebtoken';
 import jwtConfig from '../../config/jwt';
-import redisConnection from '../../redis/redisConnection';
-
-const redis = redisConnection();
+import State from './state';
 
 export async function getDefaultAccessToken() {
-  const defaultUserId = await redis.get('testDefaultUser');
+  const defaultUserId = State.get('testDefaultUser');
   return jwt.sign({ id: defaultUserId, login: 'test', isAdmin: false }, jwtConfig.secret, jwtConfig.accessExpirationTime);
 }
 
 export async function getAdminAccessToken() {
-  const adminUserId = await redis.get('testAdminUser');
+  const adminUserId = State.get('testAdminUser');
   return jwt.sign({ id: adminUserId, login: 'testAdmin', isAdmin: true }, jwtConfig.secret, jwtConfig.accessExpirationTime);
 }
