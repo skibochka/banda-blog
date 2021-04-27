@@ -2,9 +2,8 @@ import supertestInstance from '../../src/helpers/tests/supertestInstance';
 import supertest from 'supertest';
 import { getDefaultAccessToken } from '../../src/helpers/tests/getAccessToken';
 import { initUserErrorsDatabase } from '../../src/helpers/tests/initDatabase';
-import redisConnection from '../../src/redis/redisConnection';
+import State from '../../src/helpers/tests/state';
 
-const redis = redisConnection();
 let agent: supertest.SuperTest<supertest.Test>;
 let defaultAccessToken: string;
 let postId: string;
@@ -15,8 +14,8 @@ describe('Check default user expected errors', () => {
     agent = await supertestInstance();
     await initUserErrorsDatabase();
     defaultAccessToken = await getDefaultAccessToken();
-    postId = await redis.get('testUserErrorsPostId') as string;
-    commentId = await redis.get('testUserErrorsCommentId') as string;
+    postId = State.get('testUserErrorsPostId') as string;
+    commentId = State.get('testUserErrorsCommentId') as string;
   });
 
   test('Check for error while trying to update another user`s post', (done) => {

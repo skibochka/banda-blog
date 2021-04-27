@@ -2,9 +2,9 @@ import supertestInstance from '../../src/helpers/tests/supertestInstance';
 import supertest from 'supertest';
 import { getAdminAccessToken } from '../../src/helpers/tests/getAccessToken';
 import { initAdminUserDatabase } from '../../src/helpers/tests/initDatabase';
-import redisConnection from '../../src/redis/redisConnection';
+import State from '../../src/helpers/tests/state';
 
-const redis = redisConnection();
+
 let agent: supertest.SuperTest<supertest.Test>;
 let adminAccessToken: string;
 let postId: string;
@@ -15,8 +15,8 @@ describe('Admin user blog functionality test', () => {
     agent = await supertestInstance();
     await initAdminUserDatabase();
     adminAccessToken = await getAdminAccessToken();
-    postId = await redis.get('testAdminPostId') as string;
-    commentId = await redis.get('testAdminCommentId') as string;
+    postId = State.get('testAdminPostId') as string;
+    commentId = State.get('testAdminCommentId') as string;
   });
 
   test('Admin update default user`s post', (done) => {

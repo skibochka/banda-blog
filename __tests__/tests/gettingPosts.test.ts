@@ -1,9 +1,8 @@
 import supertestInstance from '../../src/helpers/tests/supertestInstance';
 import supertest from 'supertest';
 import { initGettingPostsDataBase } from '../../src/helpers/tests/initDatabase';
-import redisConnection from '../../src/redis/redisConnection';
+import State from '../../src/helpers/tests/state';
 
-const redis = redisConnection();
 let agent: supertest.SuperTest<supertest.Test>;
 let testPostId: string;
 
@@ -12,7 +11,7 @@ describe('Check getting posts and comments', () => {
   beforeAll(async () => {
     agent = await supertestInstance();
     await initGettingPostsDataBase();
-    testPostId = await redis.get('gettingPostId') as string;
+    testPostId = State.get('gettingPostId') as string;
   });
 
   test('Check getting post by pagination', (done) => {

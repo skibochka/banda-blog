@@ -1,50 +1,17 @@
 name: Pull action
 on: [push]
 jobs:
-  setup-build-publish-deploy:
-    name: Run tests
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Test redis cluster
-        uses: vishnudxb/redis-cluster@1.0.5
-        with:
-          master1-port: 5000
-          master2-port: 5001
-          master3-port: 5002
-          slave1-port: 5003
-          slave2-port: 5004
-          slave3-port: 5005
-
-      # Running Test
-      - name: Running Test
-        run: |
-          sudo apt-get install -y redis-tools
-          docker ps -a
-          redis-cli -h 127.0.0.1 -p 5000 ping
-          redis-cli -h 127.0.0.1 -p 5000 cluster nodes
   test:
-    needs: [setup-build-publish-deploy]
     runs-on: ubuntu-latest
     strategy:
       matrix:
         node-version: [10.x]
     steps:
-      - uses: vishnudxb/redis-cluster@1.0.5
-        with:
-          master1-port: 6375
       - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - uses: getong/redis-action@v1
-        with:
-          redis version: '5.0.7'
-          host port: 6379
-          container port: 6379
       - name: set envs
         uses: allenevans/set-env@v2.0.0
         with:
@@ -56,7 +23,6 @@ jobs:
           TEST_ORM_MIGRATIONS: src/migrations/**/*.ts
           TEST_ORM_ENTITIES_DIR: src/models
           TEST_ORM_MIGRATIONS_DIR: src/migrations
-
       - name: npm install and test
         run: |
           npm install
@@ -66,12 +32,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - name: Test NodeJs app
-        uses: actions/setup-node@v1
-      - name: Install dependencies
-        run: npm install
-      - name: Run tests
-        run: npm run test
       - name: Pull NodeJS app
         uses: appleboy/ssh-action@v0.1.2
         with:
@@ -81,6 +41,7 @@ jobs:
           script: |
             cd ~/banda-blog/
             git pull
+            tsc ormconfig.ts
             rm -rf ormconfig.ts
             npm install
             tsc

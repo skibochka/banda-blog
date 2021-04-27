@@ -1,17 +1,15 @@
 import { model } from '../db/repository';
 import { User } from '../../models/User';
-import redisConnection from '../../redis/redisConnection';
 import { Post } from '../../models/Post';
 import { Comment } from '../../models/Comment';
-
-const redis = redisConnection();
+import State from './state';
 
 export async function initDefaultUserDatabase() {
   const defaultUser = await model(User).save({
     login: 'test',
     password: 'test',
   });
-  await redis.set('testDefaultUser', defaultUser.id);
+  State.set('testDefaultUser', defaultUser.id);
 }
 
 export async function initAdminUserDatabase() {
@@ -35,9 +33,9 @@ export async function initAdminUserDatabase() {
     user: defaultUser,
   });
 
-  await redis.set('testAdminUser', adminUser.id);
-  await redis.set('testAdminPostId', testPost.id);
-  await redis.set('testAdminCommentId', testComment.id);
+  State.set('testAdminUser', adminUser.id);
+  State.set('testAdminPostId', testPost.id);
+  State.set('testAdminCommentId', testComment.id);
 }
 
 export async function initUserErrorsDatabase() {
@@ -56,8 +54,8 @@ export async function initUserErrorsDatabase() {
     user: defaultUser,
   });
 
-  await redis.set('testUserErrorsPostId', testPost.id);
-  await redis.set('testUserErrorsCommentId', testComment.id);
+  State.set('testUserErrorsPostId', testPost.id);
+  State.set('testUserErrorsCommentId', testComment.id);
 }
 
 export async function initGettingPostsDataBase() {
@@ -90,5 +88,5 @@ export async function initGettingPostsDataBase() {
     post: testPost,
     user: defaultUser,
   });
-  await redis.set('gettingPostId', testPost.id);
+  State.set('gettingPostId', testPost.id);
 }

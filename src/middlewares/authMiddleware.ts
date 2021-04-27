@@ -2,7 +2,7 @@ import { Unauthorized, BadRequest } from 'http-errors';
 import * as express from 'express';
 import jwt from 'jsonwebtoken';
 import jwtConfig from '../config/jwt';
-import redisConnection from '../redis/redisConnection';
+import CacheStorage from '../helpers/db/cacheStorage';
 
 export async function authMiddleware(req: express.Request, _res: express.Response, next: express.NextFunction) {
   if (!req.headers.authorization) {
@@ -13,8 +13,8 @@ export async function authMiddleware(req: express.Request, _res: express.Respons
     throw new Unauthorized('Please login');
   }
 
-  const redis = redisConnection();
-  const existInBlackList = await redis.get(token);
+  const cacheStorage = await CacheStorage;
+  const existInBlackList = await cacheStorage.get(token);
 
   if (existInBlackList) {
     throw new Unauthorized('Invalid token');

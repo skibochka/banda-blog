@@ -3,10 +3,10 @@ import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
 import { Conflict, NotFound, Unauthorized } from 'http-errors';
 import jwtConfig from '../config/jwt';
+import { redisConfiguration } from '../config/redis';
 import { model } from '../helpers/db/repository';
 import { User } from '../models/User';
-import { redisConfiguration } from '../config/redis';
-import redisConnection from '../redis/redisConnection';
+import CacheStorage from '../helpers/db/cacheStorage';
 
 async function signUp(req: express.Request, res: express.Response) {
   const userExist = await model(User).findOne({ login: req.body.login });
@@ -44,10 +44,10 @@ async function signIn(req: express.Request, res: express.Response) {
 }
 
 async function signOut(req: express.Request, res: express.Response) {
-  const redis = redisConnection();
+  const cacheStorage = await CacheStorage;
 
-  await redis.set(req.body.access, 'access', 'EX', redisConfiguration.accessExpirationTime);
-  await redis.set(req.body.refresh, 'refresh', 'EX', redisConfiguration.refreshExpirationTime);
+  await cacheStorage.set(req.body.access, 'access', 'EX', redisConfiguration.accessExpirationTime);
+  await cacheStorage.set(req.body.refresh, 'refresh', 'EX', redisConfiguration.refreshExpirationTime);
   res.status(200).json({
     msg: 'Logged out',
   });

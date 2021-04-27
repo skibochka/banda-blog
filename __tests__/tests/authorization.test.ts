@@ -7,7 +7,6 @@ let refresh: string;
 
 describe('Authorization tests', () => {
   beforeAll(async () => {
-    jest.setTimeout(30000);
     agent = await supertestInstance();
   });
 
