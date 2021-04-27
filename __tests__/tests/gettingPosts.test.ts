@@ -23,12 +23,26 @@ describe('Check getting posts and comments', () => {
         page: 0,
       })
       .expect(200)
-      .then(() => {
+      .then(({ body }) => {
+        expect(body).toEqual(expect.any(Array));
         done();
       });
   });
 
   test('Check getting post by id', (done) => {
+    agent
+      .get('/post/get')
+      .query({
+        postId: +testPostId,
+      })
+      .expect(200)
+      .then(({ body }) => {
+        expect(body).toEqual(expect.any(Object));
+        done();
+      });
+  });
+
+  test('Check getting cached post by id', (done) => {
     agent
       .get('/post/get')
       .query({

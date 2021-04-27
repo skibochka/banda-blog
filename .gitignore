@@ -5,3 +5,4 @@ package-lock.json
 build
 ormconfig.json
 /blog.db
+/coverage/

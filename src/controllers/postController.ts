@@ -29,7 +29,9 @@ async function deletePost(req: express.Request, res: express.Response) {
   if (!req.user.isAdmin) {
     const user = await model(User).findOne(req.user.id);
     const post = await model(Post).findOne({ id: req.body.postId, user });
-    if (!post) throw new Conflict('You can`t delete posts of other users');
+    if (!post) {
+      throw new Conflict('You can`t delete posts of other users');
+    }
   }
 
   await model(Post).delete({ id: req.body.postId });
@@ -43,7 +45,9 @@ async function updatePost(req: express.Request, res: express.Response) {
   if (!req.user.isAdmin) {
     const user = await model(User).findOne(req.user.id);
     const post = await model(Post).findOne({ id: req.body.postId, user });
-    if (!post) throw new Conflict('You can`t update posts of other users');
+    if (!post) {
+      throw new Conflict('You can`t update posts of other users');
+    }
   }
 
   await model(Post).update(req.body.postId, req.body.update);
