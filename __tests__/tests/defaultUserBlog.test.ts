@@ -24,8 +24,9 @@ describe('Default user blog functionality tests', () => {
         title: 'test title',
         content: 'test content',
       })
-      .expect(200)
+      .expect(500)
       .then(({ body }) => {
+        console.log(body);
         testPostId = body.id;
         expect(body)
           .toHaveProperty('id');
@@ -48,8 +49,9 @@ describe('Default user blog functionality tests', () => {
           content: 'test update',
         },
       })
-      .expect(200)
+      .expect(500)
       .then(({ body }) => {
+        console.log(body);
         expect(body)
           .toHaveProperty('msg', 'Successful updated');
         done();
@@ -63,8 +65,9 @@ describe('Default user blog functionality tests', () => {
       .send({
         postId: testPostId,
       })
-      .expect(200)
+      .expect(500)
       .then(({ body }) => {
+        console.log(body);
         expect(body)
           .toHaveProperty('msg', 'Successful liked');
         done();
@@ -79,8 +82,9 @@ describe('Default user blog functionality tests', () => {
         postId: testPostId,
         content: 'test comment',
       })
-      .expect(200)
+      .expect(500)
       .then(({ body }) => {
+        console.log(body);
         testCommentId = body.id;
         expect(body)
           .toHaveProperty('content');
@@ -98,8 +102,9 @@ describe('Default user blog functionality tests', () => {
           content: 'Updated test',
         },
       })
-      .expect(200)
+      .expect(500)
       .then(({ body }) => {
+        console.log(body);
         expect(body)
           .toHaveProperty('msg', 'Successful updated');
         done();
@@ -113,8 +118,9 @@ describe('Default user blog functionality tests', () => {
       .send({
         commentId: testPostId,
       })
-      .expect(200)
+      .expect(500)
       .then(({ body }) => {
+        console.log(body);
         expect(body)
           .toHaveProperty('msg', 'Successful liked');
         done();
@@ -128,8 +134,9 @@ describe('Default user blog functionality tests', () => {
       .send({
         commentId: testCommentId,
       })
-      .expect(200)
+      .expect(500)
       .then(({ body }) => {
+        console.log(body);
         expect(body)
           .toHaveProperty('msg', 'Comment successful deleted');
         done();
