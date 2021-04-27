@@ -116,8 +116,8 @@ async function getPosts(req: express.Request, res: express.Response) {
 }
 
 async function createComment(req: express.Request, res: express.Response) {
-  const user = await model(User).findOne({ id: req.user.id });
-  const post = await model(Post).findOne({ id: req.body.postId });
+  const user = await model(User).findOne({ where: { id: req.user.id } });
+  const post = await model(Post).findOne({ where: { id: req.body.postId } });
 
   const comment = await model(Comment).save({
     content: req.body.content,

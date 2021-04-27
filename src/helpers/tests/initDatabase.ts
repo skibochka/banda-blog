@@ -2,14 +2,16 @@ import { model } from '../db/repository';
 import { User } from '../../models/User';
 import { Post } from '../../models/Post';
 import { Comment } from '../../models/Comment';
-import State from './state';
+import CacheStorage from '../db/cacheStorage';
 
 export async function initDefaultUserDatabase() {
   const defaultUser = await model(User).save({
     login: 'test',
     password: 'test',
   });
-  State.set('testDefaultUser', defaultUser.id);
+  const cacheStorage = await CacheStorage;
+
+  await cacheStorage.set('testDefaultUserId', defaultUser.id);
 }
 
 export async function initAdminUserDatabase() {
@@ -32,10 +34,11 @@ export async function initAdminUserDatabase() {
     post: testPost,
     user: defaultUser,
   });
+  const cacheStorage = await CacheStorage;
 
-  State.set('testAdminUser', adminUser.id);
-  State.set('testAdminPostId', testPost.id);
-  State.set('testAdminCommentId', testComment.id);
+  await cacheStorage.set('testAdminUser', adminUser.id);
+  await cacheStorage.set('testAdminPostId', testPost.id);
+  await cacheStorage.set('testAdminCommentId', testComment.id);
 }
 
 export async function initUserErrorsDatabase() {
@@ -53,9 +56,10 @@ export async function initUserErrorsDatabase() {
     post: testPost,
     user: defaultUser,
   });
+  const cacheStorage = await CacheStorage;
 
-  State.set('testUserErrorsPostId', testPost.id);
-  State.set('testUserErrorsCommentId', testComment.id);
+  await cacheStorage.set('testUserErrorsPostId', testPost.id);
+  await cacheStorage.set('testUserErrorsCommentId', testComment.id);
 }
 
 export async function initGettingPostsDataBase() {
@@ -88,5 +92,7 @@ export async function initGettingPostsDataBase() {
     post: testPost,
     user: defaultUser,
   });
-  State.set('gettingPostId', testPost.id);
+  const cacheStorage = await CacheStorage;
+
+  await cacheStorage.set('gettingPostId', testPost.id);
 }

@@ -1,6 +1,6 @@
 import { IState } from '../../interfaces/IState';
 
-class State {
+export class SimpleState {
   private readonly state: IState;
 
   constructor() {
@@ -8,11 +8,10 @@ class State {
   }
 
   public set(key: string, value: any): void {
-    this.state[`${key}`] = JSON.stringify(value);
+    this.state[key] = JSON.stringify(value);
   }
 
-  public get(key: string): string | undefined {
+  public get(key: string): string | null {
     return this.state[`${key}`];
   }
 }
-export default new State();

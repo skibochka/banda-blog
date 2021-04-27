@@ -3,11 +3,6 @@
 // *******************************
 require('./tests/authorization.test');
 
-// *******************************
-// * CHECK AUTHORIZATION ERRORS
-// *******************************
-require('./tests/authorizationNegative.test');
-
 // ********************************
 // * CHECK DEFAULT USER BLOG LOGIC
 // ********************************
@@ -32,3 +27,8 @@ require('./tests/middlewaresErrors.test');
 // * CHECK GETTING POSTS
 // ********************************
 require('./tests/gettingPosts.test');
+
+// *******************************
+// * CHECK AUTHORIZATION ERRORS
+// *******************************
+require('./tests/authorizationNegative.test');

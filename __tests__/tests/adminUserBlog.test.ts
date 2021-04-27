@@ -2,8 +2,7 @@ import supertestInstance from '../../src/helpers/tests/supertestInstance';
 import supertest from 'supertest';
 import { getAdminAccessToken } from '../../src/helpers/tests/getAccessToken';
 import { initAdminUserDatabase } from '../../src/helpers/tests/initDatabase';
-import State from '../../src/helpers/tests/state';
-
+import CacheStorage from '../../src/helpers/db/cacheStorage';
 
 let agent: supertest.SuperTest<supertest.Test>;
 let adminAccessToken: string;
@@ -15,8 +14,9 @@ describe('Admin user blog functionality test', () => {
     agent = await supertestInstance();
     await initAdminUserDatabase();
     adminAccessToken = await getAdminAccessToken();
-    postId = State.get('testAdminPostId') as string;
-    commentId = State.get('testAdminCommentId') as string;
+    const cacheStorage = await CacheStorage;
+    postId = await cacheStorage.get('testAdminPostId') as string;
+    commentId = await cacheStorage.get('testAdminCommentId') as string;
   });
 
   test('Admin update default user`s post', (done) => {

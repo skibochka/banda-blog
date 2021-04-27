@@ -1,7 +1,7 @@
 import supertestInstance from '../../src/helpers/tests/supertestInstance';
 import supertest from 'supertest';
 import { initGettingPostsDataBase } from '../../src/helpers/tests/initDatabase';
-import State from '../../src/helpers/tests/state';
+import CacheStorage from '../../src/helpers/db/cacheStorage';
 
 let agent: supertest.SuperTest<supertest.Test>;
 let testPostId: string;
@@ -11,7 +11,8 @@ describe('Check getting posts and comments', () => {
   beforeAll(async () => {
     agent = await supertestInstance();
     await initGettingPostsDataBase();
-    testPostId = State.get('gettingPostId') as string;
+    const cacheStorage = await CacheStorage;
+    testPostId = await cacheStorage.get('gettingPostId') as string;
   });
 
   test('Check getting post by pagination', (done) => {

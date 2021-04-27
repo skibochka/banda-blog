@@ -2,7 +2,7 @@ import supertestInstance from '../../src/helpers/tests/supertestInstance';
 import supertest from 'supertest';
 import { getDefaultAccessToken } from '../../src/helpers/tests/getAccessToken';
 import { initUserErrorsDatabase } from '../../src/helpers/tests/initDatabase';
-import State from '../../src/helpers/tests/state';
+import CacheStorage from '../../src/helpers/db/cacheStorage';
 
 let agent: supertest.SuperTest<supertest.Test>;
 let defaultAccessToken: string;
@@ -14,8 +14,9 @@ describe('Check default user expected errors', () => {
     agent = await supertestInstance();
     await initUserErrorsDatabase();
     defaultAccessToken = await getDefaultAccessToken();
-    postId = State.get('testUserErrorsPostId') as string;
-    commentId = State.get('testUserErrorsCommentId') as string;
+    const cacheStorage = await CacheStorage;
+    postId = await cacheStorage.get('testUserErrorsPostId') as string;
+    commentId = await cacheStorage.get('testUserErrorsCommentId') as string;
   });
 
   test('Check for error while trying to update another user`s post', (done) => {
